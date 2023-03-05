@@ -3,6 +3,7 @@ package com.bubbling.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 2022-02-26 17:17:31 GMT+8
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CommonMessage<T> {
     private int code;	//状态码
     private String msg;	//消息内容
@@ -21,8 +23,8 @@ public class CommonMessage<T> {
     /**
      * 2022-02-26 17:19:35 GMT+8
      * 无data的构造方法
-     * @param code
-     * @param message
+     * @param code 状态码
+     * @param message 消息
      * @author k
      */
     public CommonMessage(int code, String message){
