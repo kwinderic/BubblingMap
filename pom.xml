@@ -25,6 +25,7 @@
     <modules>
         <module>bubbling-api-commons</module>
         <module>bubbling-user</module>
+        <module>bubbling-activity</module>
     </modules>
 
     <dependencyManagement>

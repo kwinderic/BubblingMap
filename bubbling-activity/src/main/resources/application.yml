@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/bubbling?useUnicode=true&characterEncoding=utf8&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: Activity-Module-Service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 114.115.208.9:8848
+
+mybatis:
+  type-aliases-package: com.bubbling.pojo
+  mapper-locations: classpath:mapper/*.xml
