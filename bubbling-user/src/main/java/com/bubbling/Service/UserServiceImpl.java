@@ -1,4 +1,4 @@
-package com.bubbling.Service;
+package com.bubbling.service;
 
 import com.bubbling.mapper.UserMapper;
 import com.bubbling.pojo.BubblingUser;

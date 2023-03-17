@@ -23,6 +23,7 @@ public class BubblingActInfo {
     private String endTime;
     private String place;
     private int type;
+    private String sponsorNo;
     private String sponsorNickname;
     private String sponsorPhone;
     private Date createTime;
