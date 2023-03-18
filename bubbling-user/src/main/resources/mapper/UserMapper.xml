@@ -9,9 +9,39 @@
         <result property="createTime" column="create_time" />
         <result property="updateTime" column="update_time" />
     </resultMap>
+    <resultMap id="CardMap" type="BubblingUserCard">
+        <id property="userPhone" column="userphone" />
+        <result property="identityType" column="identitype" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
 
-    <select id="queryAllUser" resultMap="UserMap">
-        select * from user_base_info;
+    <select id="queryUserByPhone" resultMap="UserMap">
+        select * from user_base_info where `state`=0 and `userphone`=#{userPhone}
     </select>
-
+    <select id="getUserInfo" resultType="Map">
+        select `userphone`,`nickname` from user_base_info where `state`=0 and `userphone`=#{userPhone}
+    </select>
+    <select id="getCardInfo" resultMap="CardMap">
+        select * from user_card_info where `state`=0
+    </select>
+    <select id="getUserActivityList" resultType="Map">
+        select * from parti_activity where `state`=0
+    </select>
+    <insert id="insertCardInfo">
+        insert into user_card_info(`userphone`,`realname`,`gender`,`identitype`,`identityno`,`birthday`,`area`,`relation`,`emergencyphone`)
+        values (#{userPhone},#{realName},#{gender},#{identityType},#{identityNo},#{birthday},#{area},#{relation},#{emergencyPhone})
+    </insert>
+    <update id="deleteCardInfo">
+        update user_card_info
+        set `state`=1 where `userphone`=#{userPhone}
+    </update>
+    <insert id="addActivity">
+        insert into parti_activity(`parti_no`,`activity_no`)
+        values (#{partiNo},#{activityNo})
+    </insert>
+    <update id="deleteActivity">
+        update parti_activity(`parti_no`,`activity_no`)
+        set `state`=2
+    </update>
 </mapper>

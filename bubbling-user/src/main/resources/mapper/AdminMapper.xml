@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubbling.mapper.AdminMapper">
+    <insert id="adminAddActivity">
+        insert into parti_activity(`parti_no`,`activity_no`,`state`)
+        values (#{partiNo},#{activityNo},1)
+    </insert>
+    <update id="adminDeleteActivity">
+        update parti_activity(`parti_no`,`activity_no`)
+        set `state`=3
+    </update>
+    <select id="getAdminActivityList" resultType="Map">
+        select * from parti_activity where `state`=1
+    </select>
+</mapper>
