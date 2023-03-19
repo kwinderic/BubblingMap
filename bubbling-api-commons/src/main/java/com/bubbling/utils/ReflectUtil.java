@@ -61,6 +61,14 @@ public class ReflectUtil {
                         map.put(field.getName(),val);
                     }
                 }
+                // 类型是int
+                if (field.getGenericType().toString().equals(
+                        "int")) {
+                    Method m = (Method) object.getClass().getMethod(
+                            "get" + getMethodName(field.getName()));
+                    int val = (int) m.invoke(object);
+                    map.put(field.getName(),val);
+                }
             }
         }
         return map;
