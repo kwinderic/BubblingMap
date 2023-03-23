@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubbling.mapper.ActivityMapper">
+
+    <insert id="recordUserLocation">
+        insert into act_location (`activityNo`,`userphone`,`longitude`,`latitude`)
+        values (#{activityId},#{userPhone},#{longitude},#{latitude});
+    </insert>
+
+    <update id="eraseUserLocation">
+        update act_location
+        set `state` = 1
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <select id="queryUserLocation" resultType="ActivityLocation">
+        select *
+        from act_location;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </select>
+
+    <select id="queryAllUserLocation" resultType="ActivityLocation">
+        select *
+        from act_location;
+        where `activityid` = #{activityId};
+    </select>
+
+    <insert id="addTask">
+        insert into act_task (`activityid`,`taskid`,`premise`)
+        values (#{activityId},#{taskId},#{premise},#{state});
+    </insert>
+
+    <update id="eraseTask">
+        update act_task
+        set `state` = 1
+        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `taskid` = #{taskId};
+    </update>
+
+    <update id="alterTask">
+        update act_task
+        set  premise = #{premise}
+        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `taskid` = #{taskId};
+    </update>
+
+    <update id="alterUserTaskState">
+        update act_task_state
+        set `state` = #{state}
+        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `taskid` = #{taskId};
+    </update>
+
+    <update id="alterUserActProgress">
+        update act_progress
+        set `state` = #{state}
+        where `activityid` = #{activityId} and `userphone` = #{userPhone} ;
+    </update>
+
+    <select id="actRunState" >
+        select state from activity where `activityid` = #{activityId};
+    </select>
+
+    <select id="userPatiState" >
+        select `state` from pati_activity where `activityid` = #{activityId} and `patino` = #{userPhone};
+    </select>
+
+    <select id="userRunState" >
+        select `state` from act_progress where `activityId` = #{activityId} and `userphone` = #{userPhone};
+    </select>
+
+    <select id="actShouldRun" resultType="BubblingActInfo">
+        select *
+        from activity
+        where `state` = 0 and `starttime` &lt;= nowtime;
+    </select>
+
+    <update id="actRun">
+        update activity
+        set `state` = 2;
+        where `state` = 0 and `starttime` &lt;= nowtime;
+    </update>
+
+    <select id="actShouldFinish" resultType="BubblingActInfo">
+        select *
+        from activity
+        where `state` = 2 and `endtime` &gt;= nowtime;
+    </select>
+
+    <update id="actFinish">
+        update activity
+        set `state` = 3;
+        where `state` = 2 and `starttime` &lt;= nowtime;
+    </update>
+
+    <update id="userEnterAct">
+        update act_progress
+        set `state` = 1;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <update id="userExitAct">
+        update act_progress
+        set `state` = 2;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <update id="userSuspendAct">
+        update act_progress
+        set `state` = 3;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <update id="userFinishAct">
+        update act_progress
+        set `state` = 4;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <update id="userFinishAct">
+        update act_progress
+        set `state` = 0;
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </update>
+
+    <select id="showActivities">
+        select *
+        from activity;
+        where `state` = 0 or `state` = 2;
+    </select>
+
+</mapper>
