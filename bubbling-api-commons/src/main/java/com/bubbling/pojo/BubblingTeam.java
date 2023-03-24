@@ -17,9 +17,10 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class BubblingTeam {
-    private String teamNo;
-    private String name;
+    private String teamId;
+    private String teamName;
     private int type;
+    private String intro;
     private Date createTime;
     private Date updateTime;
     private int state;

@@ -6,15 +6,19 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.bubbling.dto.CommonMessage;
 import com.bubbling.service.AdminService;
 import com.bubbling.utils.JWTUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2022-03-12 11:23:35 GMT+8
+ * 获取用户创建的活动
+ * @author k
+ */
+@Slf4j
 @RestController
 @RequestMapping(("/admin"))
 public class AdminController {
@@ -26,14 +30,15 @@ public class AdminController {
     public String addActivity(@PathVariable("token") String token, @PathVariable("activityNo") String activityNo){
         try {
             String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-            adminService.adminAddActivity(userPhone, activityNo);
-            commonMessage = new CommonMessage(210, "添加成功");
+            if(adminService.adminAddActivity(userPhone, activityNo)==1)
+                commonMessage = new CommonMessage(210, "添加成功");
+            else commonMessage = new CommonMessage(214, "添加失败");
         }catch (TokenExpiredException e){
             commonMessage = new CommonMessage(211, "令牌过期，认证失败");
         }catch (SignatureGenerationException e){
             commonMessage = new CommonMessage(212, "签名不一致，认证失败");
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             commonMessage = new CommonMessage(213, "未知异常，认证失败");
         }
         return JSON.toJSONString(commonMessage);
@@ -43,20 +48,21 @@ public class AdminController {
     public String deleteActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
         try {
             String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-            adminService.adminDeleteActivity(userPhone, activityNo);
-            commonMessage = new CommonMessage(210, "删除成功");
+            if(adminService.adminDeleteActivity(userPhone, activityNo)==1)
+                commonMessage = new CommonMessage(210, "删除成功");
+            else commonMessage = new CommonMessage(214, "添加失败");
         }catch (TokenExpiredException e){
             commonMessage = new CommonMessage(211, "令牌过期，认证失败");
         }catch (SignatureGenerationException e){
             commonMessage = new CommonMessage(212, "签名不一致，认证失败");
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             commonMessage = new CommonMessage(213, "未知异常，认证失败");
         }
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/getactivitylist/{token}")
+    @GetMapping("/getactivitylist/{token}")
     public String getActivityList(@PathVariable("token") String token){
         try {
             String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -67,7 +73,7 @@ public class AdminController {
         }catch (SignatureGenerationException e){
             commonMessage = new CommonMessage(212, "签名不一致，认证失败");
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             commonMessage = new CommonMessage(213, "未知异常，认证失败");
         }
         return JSON.toJSONString(commonMessage);

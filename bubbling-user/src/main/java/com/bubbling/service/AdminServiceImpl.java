@@ -18,7 +18,7 @@ public class AdminServiceImpl implements AdminService{
         Map<String, String> map = new HashMap<>();
         map.put("partiNo", partiNo);
         map.put("activityNo", activityNo);
-        return adminMapper.adminAddActivity(map);
+        return adminMapper.adminCreateActivity(map);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class AdminServiceImpl implements AdminService{
     public List<Map<String, String>> getAdminActivityList(String userPhone) {
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
-        return adminMapper.getAdminActivityList(map);
+        return adminMapper.getCreateActivityList(map);
     }
 }

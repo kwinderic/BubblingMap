@@ -17,14 +17,15 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class BubblingActInfo {
-    private String activityNo;
+    private String activityId;
     private String name;
     private String startTime;
     private String endTime;
     private String place;
+    private double longitude;
+    private double latitude;
     private int type;
-    private String sponsorNo;
-    private String sponsorNickname;
+    private String sponsorName;
     private String sponsorPhone;
     private Date createTime;
     private Date updateTime;

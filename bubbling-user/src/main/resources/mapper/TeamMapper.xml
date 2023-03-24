@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubbling.mapper.TeamMapper">
+    <resultMap id="TeamMap" type="BubblingTeam">
+        <id property="teamId" column="teamid" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+    <insert id="createTeam">
+        insert into team_info(`teamid`,`teamname`)
+        values (#{teamId},#{teamName})
+    </insert>
+    <select id="getTeamList" resultMap="TeamMap">
+        select *
+        from `team_info` t join `parti_team` pt
+        on pt.`teamid`=t.`teamid`
+        where t.`state`=0 and `userphone`=#{userPhone}
+    </select>
+</mapper>

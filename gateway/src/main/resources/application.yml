@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Gateway-Module-Service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 82.157.154.180:8848
+    gateway:
+      routes:
+        - id: user_routes
+          uri: http://localhost:8081
+          predicates:
+            - Path=/user/{api}/{token}/**,/admin/{api}/{token}/**,/team/{api}/{token}/**
+        - id: activity_routes
+          uri: http://localhost:8082
+          predicates:
+            - Path=/activity/{api}/{token}/**

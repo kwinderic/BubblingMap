@@ -17,16 +17,24 @@
     </resultMap>
 
     <select id="queryUserByPhone" resultMap="UserMap">
-        select * from user_base_info where `state`=0 and `userphone`=#{userPhone}
+        select *
+        from user_base_info
+        where `state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getUserInfo" resultType="Map">
-        select `userphone`,`nickname` from user_base_info where `state`=0 and `userphone`=#{userPhone}
+        select `userphone`,`nickname`
+        from user_base_info
+        where `state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getCardInfo" resultMap="CardMap">
-        select * from user_card_info where `state`=0
+        select *
+        from user_card_info
+        where `state`=0 and `userphone`={userPhone}
     </select>
-    <select id="getUserActivityList" resultType="Map">
-        select * from parti_activity where `state`=0
+    <select id="getPartiActivityList" resultType="Map">
+        select *
+        from parti_activity
+        where `state`=0 and `userphone`=#{userPhone}
     </select>
     <insert id="insertCardInfo">
         insert into user_card_info(`userphone`,`realname`,`gender`,`identitype`,`identityno`,`birthday`,`area`,`relation`,`emergencyphone`)
@@ -34,14 +42,16 @@
     </insert>
     <update id="deleteCardInfo">
         update user_card_info
-        set `state`=1 where `userphone`=#{userPhone}
+        set `state`=1
+        where `userphone`=#{userPhone}
     </update>
-    <insert id="addActivity">
+    <insert id="userPartiActivity">
         insert into parti_activity(`parti_no`,`activity_no`)
-        values (#{partiNo},#{activityNo})
+        values (#{partiNo},#{activityId})
     </insert>
-    <update id="deleteActivity">
+    <update id="userQuitActivity">
         update parti_activity(`parti_no`,`activity_no`)
         set `state`=2
+        where `userphone`=#{userPhone} and `activityid`=#{activityId}
     </update>
 </mapper>

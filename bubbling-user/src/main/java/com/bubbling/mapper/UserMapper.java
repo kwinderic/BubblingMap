@@ -12,9 +12,10 @@ public interface UserMapper {
     BubblingUser queryUserByPhone(Map<String,String> map);
     Map<String,String> getUserInfo(Map<String,String> map);
     BubblingUserCard getCardInfo(Map<String,String> map);
-    List<Map<String,String>> getUserActivityList(Map<String,String> map);
+    List<Map<String,String>> getPartiActivityList(Map<String,String> map);
+    List<Map<String,String>> getCreateActivityList(Map<String,String> map);
     int insertCardInfo(Map<String,Object> map);
     int deleteCardInfo(Map<String,Object> map);
-    int userAddActivity(Map<String,String> map);
-    int userDeleteActivity(Map<String,String> map);
+    int userPartiActivity(Map<String,String> map);
+    int userQuitActivity(Map<String,String> map);
 }

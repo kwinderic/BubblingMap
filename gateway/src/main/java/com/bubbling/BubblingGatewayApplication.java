@@ -2,12 +2,12 @@ package com.bubbling;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@EnableFeignClients
 @SpringBootApplication
-public class BubblingActivityApplication {
+public class BubblingGatewayApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(BubblingActivityApplication.class, args);
+        SpringApplication.run(BubblingGatewayApplication.class, args);
     }
+
 }

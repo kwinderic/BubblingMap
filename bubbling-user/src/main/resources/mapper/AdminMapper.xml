@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bubbling.mapper.AdminMapper">
-    <insert id="adminAddActivity">
+    <insert id="adminCreateActivity">
         insert into parti_activity(`parti_no`,`activity_no`,`state`)
         values (#{partiNo},#{activityNo},1)
     </insert>
@@ -12,7 +12,9 @@
         update parti_activity(`parti_no`,`activity_no`)
         set `state`=3
     </update>
-    <select id="getAdminActivityList" resultType="Map">
-        select * from parti_activity where `state`=1
+    <select id="getCreateActivityList" resultType="Map">
+        select *
+        from parti_activity
+        where `state`=1 and `userphone`=#{userPhone}
     </select>
 </mapper>
