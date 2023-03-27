@@ -88,7 +88,7 @@ public class UserController {
      * 获取token过期时间
      * 2022-03-13 21:12:18 GMT+8
      * @author k
-     */
+      */
     @GetMapping("/gettimeouttime/{token}")
     public String getTimeoutTime(@PathVariable("token") String token){
         try {
@@ -183,7 +183,7 @@ public class UserController {
                 commonMessage = new CommonMessage(210, "修改成功");
             else commonMessage = new CommonMessage(214, "修改失败");
         }catch (TokenExpiredException e){
-            commonMessage = new CommonMessage(211, "令牌过期，认证失败");
+            commonMessage = new CommonMessage(211, "令牌过期，认证失败 ");
         }catch (SignatureGenerationException e){
             commonMessage = new CommonMessage(212, "签名不一致，认证失败");
         }catch (Exception e){
@@ -193,7 +193,7 @@ public class UserController {
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/addactivity/{activityNo}/{token}")
+    @PostMapping("/patiactivity/{activityNo}/{token}")
     public String partiActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
         try {
             String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -211,7 +211,7 @@ public class UserController {
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/deleteactivity/{activityNo}/{token}")
+    @PostMapping("/quitactivity/{activityNo}/{token}")
     public String quitActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
         try {
             String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");

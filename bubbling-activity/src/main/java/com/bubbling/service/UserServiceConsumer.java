@@ -10,4 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface UserServiceConsumer {
     @PostMapping("/user/login/{userPhone}/{password}/{longitude}/{latitude}")
     String login(@PathVariable("userPhone") String userPhone, @PathVariable("password") String password, @PathVariable("longitude") String longitude, @PathVariable("latitude") String latitude);
+
+
 }
+
+

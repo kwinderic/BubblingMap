@@ -69,6 +69,14 @@ public class ReflectUtil {
                     int val = (int) m.invoke(object);
                     map.put(field.getName(),val);
                 }
+                //类型是double
+                if (field.getGenericType().toString().equals(
+                        "double")) {
+                    Method m = (Method) object.getClass().getMethod(
+                            "get" + getMethodName(field.getName()));
+                    double val = (double) m.invoke(object);
+                    map.put(field.getName(),val);
+                }
             }
         }
         return map;
