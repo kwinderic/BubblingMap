@@ -1,7 +1,10 @@
 package com.bubbling.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -603,7 +606,13 @@ public class RedisUtil {
     public long geoRemove(String k, String m){
         return redisTemplate.opsForZSet().remove(k, m);
     }
-
-
+    public List<Point> geoPos(String k, String m){
+        return redisTemplate.opsForGeo().position(k, m);
+    }
+    public GeoResults geoRadiusByMember(String k, String m, Distance distance, long count){
+        RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
+                .includeDistance().includeCoordinates().sortAscending().limit(count);
+        return redisTemplate.opsForGeo().radius(k, m, distance, args);
+    }
 
 }

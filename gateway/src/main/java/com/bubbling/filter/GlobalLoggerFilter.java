@@ -26,8 +26,7 @@ public class GlobalLoggerFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         Mono<Void> result;
-        Date begin=new Date();
-        log.info("[into] request time: "+begin.getTime());
+        log.info("[into] request time: "+new Date().getTime());
 
         Map<String, String> uriVariables = ServerWebExchangeUtils.getUriTemplateVariables(exchange);
         String method= uriVariables.get("api");
@@ -55,8 +54,7 @@ public class GlobalLoggerFilter implements GlobalFilter, Ordered {
                 log.info("[out] response time: "+end.getTime());
             }
         }
-        Date end=new Date();
-        log.info("[out] response time: "+end.getTime());
+        log.info("[out] response time: "+new Date().getTime());
         return result;
     }
 

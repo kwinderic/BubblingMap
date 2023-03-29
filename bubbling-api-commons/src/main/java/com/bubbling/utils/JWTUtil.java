@@ -14,7 +14,6 @@ import java.util.Map;
  * @author k
  */
 public class JWTUtil {
-    private static String secretKey="k+5/|.|%T8C#0$b]#4";
     /**
      * 2022-03-04 23:40:30 GMT+8
      * 设置密钥
@@ -22,7 +21,7 @@ public class JWTUtil {
      * @author k
      */
     public static void setSecretKey(String secretKey){
-        JWTUtil.secretKey =secretKey;
+        ConstantUtil.secretKey =secretKey;
     }
     /**
      * 2022-03-04 23:40:49 GMT+8
@@ -36,7 +35,7 @@ public class JWTUtil {
         JWTCreator.Builder builder = JWT.create();
         map.forEach(builder::withClaim);
         return builder.withExpiresAt(instance.getTime()). //指定令牌过期时间
-                sign(Algorithm.HMAC256(secretKey));
+                sign(Algorithm.HMAC256(ConstantUtil.secretKey));
     }
     /**
      * 2022-03-04 23:41:05 GMT+8
@@ -45,6 +44,6 @@ public class JWTUtil {
      * @author k
      */
     public static DecodedJWT verify(String token){
-        return JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+        return JWT.require(Algorithm.HMAC256(ConstantUtil.secretKey)).build().verify(token);
     }
 }
