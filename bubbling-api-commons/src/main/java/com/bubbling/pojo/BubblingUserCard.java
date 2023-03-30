@@ -23,7 +23,7 @@ public class BubblingUserCard {
     private char    gender;
     private String  identityType;
     private String  identityNo;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date    birthday;
     private String  area;
     private String  relation;

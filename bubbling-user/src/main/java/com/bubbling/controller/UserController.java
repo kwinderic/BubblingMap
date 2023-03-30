@@ -33,7 +33,8 @@ public class UserController {
 
     /**
      * 登录，并返回token
-     * 2022-03-19 10:38:33 GMT+8
+     * 【已测试】
+     * 2022-03-19 20:17:49 GMT+8
      * @author k
      */
     @PostMapping("/login/{userPhone}/{password}/{longitude}/{latitude}")
@@ -49,6 +50,7 @@ public class UserController {
 
     /**
      * 登出，需要密码进行身份验证
+     * 【已测试】
      * 2022-03-19 10:38:37 GMT+8
      * @author k
      */
@@ -56,15 +58,15 @@ public class UserController {
     public String logout(@PathVariable("token") String token,@PathVariable("password") String password){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         BubblingUser bubblingUser = userService.queryUserOnPhoneAndPassword(userPhone,password);
-        if(bubblingUser!=null){
+        if(bubblingUser!=null && redisUtil.geoRemove(ConstantUtil.onlineUser, userPhone)==1)
             commonMessage = new CommonMessage(200, "退出成功");
-            redisUtil.geoRemove(ConstantUtil.onlineUser, userPhone);
-        } else commonMessage = new CommonMessage(201, "认证失败，退出失败");
+        else commonMessage = new CommonMessage(201, "认证失败，退出失败");
         return JSON.toJSONString(commonMessage);
     }
 
     /**
      * 根据token获取基本信息
+     * 【已测试】
      * 2022-03-19 10:38:39 GMT+8
      * @author k
      */
@@ -78,15 +80,22 @@ public class UserController {
 
     /**
      * 获取token过期时间
+     * 【已测试】
      * 2022-03-19 10:38:42 GMT+8
      * @author k
       */
     @GetMapping("/gettimeouttime/{token}")
     public String getTimeoutTime(@PathVariable("token") String token){
-        commonMessage = new CommonMessage(200, "token未过期", JWTUtil.verify(token).getClaim("exp"));
+        commonMessage = new CommonMessage(200, "token未过期", JWTUtil.verify(token).getClaim("exp").toString());
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 更新用户所在的经纬度
+     * 【已测试】
+     * 2022-03-19 20:46:11 GMT+8
+     * @author k
+     */
     @PostMapping("/update2ltude/{token}/{longitude}/{latitude}")
     public String update2LTude(@PathVariable("token") String token,@PathVariable("longitude") String longitude,@PathVariable("latitude") String latitude){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -97,11 +106,17 @@ public class UserController {
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 获取附近的未开始的活动列表, 半径40km内前10个
+     * 【已测试】
+     * 2022-03-19 20:16:22 GMT+8
+     * @author k
+     */
     @GetMapping("/getnearbyactivity/{token}")
     public String getNearbyActivityList(@PathVariable("token") String token){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         List<Point> points=redisUtil.geoPos(ConstantUtil.onlineUser, userPhone);
-        if(points!=null){
+        if(points!=null && points.get(0)!=null){
             ArrayList<PointOnMap> lists = userService.getNearbyActivity(userPhone, 40,10);
             commonMessage = new CommonMessage(210, "获取成功", lists);
         }else commonMessage = new CommonMessage(211, "不在登录状态");
@@ -110,7 +125,8 @@ public class UserController {
 
     /**
      * 根据token获取card信息
-     * 2022-03-19 10:38:44 GMT+8
+     * 【已测试】
+     * 2022-03-19 20:52:26 GMT+8
      * @author k
      */
     @GetMapping("/getcardinfo/{token}")
@@ -123,7 +139,8 @@ public class UserController {
 
     /**
      * 根据token获取参与的活动的id列表
-     * 2022-03-19 10:38:48 GMT+8
+     * 【已测试】
+     * 2022-03-19 20:52:19 GMT+8
      * @author k
      */
     @GetMapping("/getactivitylist/{token}")
@@ -135,29 +152,42 @@ public class UserController {
     }
 
     /**
-     * 更改card, 若抛出异常, 则http返回状态码为500
-     * 2022-03-19 10:38:53 GMT+8
+     * 更改card, 若抛出异常, 则http返回500状态码, 为服务器内部错误
+     * 【已测试】
+     * 2022-03-19 21:09:29 GMT+8
      * @author k
      */
     @PostMapping("/modifycard/{token}")
     public String modifyCard(@PathVariable("token") String token, BubblingUserCard card) throws Exception{
-            JWTUtil.verify(token).getClaim("userPhone");
-            if(userService.setCard(card)==1)
+        String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        if(userService.setCard(userPhone, card)==1)
             commonMessage = new CommonMessage(210, "修改成功");
         else commonMessage = new CommonMessage(211, "修改失败");
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/partiactivity/{activityNo}/{token}")
-    public String partiActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
+    /**
+     * 参加一个活动，记录到持久化数据库中
+     * 【已测试】
+     * 2022-03-19 21:09:36 GMT+8
+     * @author k
+     */
+    @PostMapping("/partiactivity/{token}/{activityId}")
+    public String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(userService.userPartiActivity(userPhone, activityNo)==1)
+        if(userService.userPartiActivity(userPhone, activityId)==1)
             commonMessage = new CommonMessage(210, "添加成功");
         else commonMessage = new CommonMessage(211, "添加失败");
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/quitactivity/{activityNo}/{token}")
+ /**
+     * 退出一个活动
+     * 【已测试】
+     * 2022-03-19 21:10:33 GMT+8
+     * @author k
+     */
+    @DeleteMapping("/quitactivity/{token}/{activityNo}"
     public String quitActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         if(userService.userQuitActivity(userPhone, activityNo)==1)

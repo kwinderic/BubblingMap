@@ -12,9 +12,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 82.157.154.180:8848
+        server-addr: localhost:8848
   redis:
-    host: 82.157.154.180
+    host: 121.5.76.140
     password: bubbling123456
 
 mybatis:

@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService{
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
         BubblingUser bubblingUser = userMapper.queryUserByPhone(map);
-        if(password.isEmpty() || !password.equals(bubblingUser.getPassword()))
-            bubblingUser=null;
-        return bubblingUser;
+        if(bubblingUser!=null || !password.isEmpty() || password.equals(bubblingUser.getPassword()))
+            return bubblingUser;
+        return null;
     }
 
     @Override
@@ -67,28 +67,36 @@ public class UserServiceImpl implements UserService{
         return userMapper.getPartiActivityList(map);
     }
 
+    /**
+     * 开启事务
+     * 2022-03-19 21:08:32 GMT+8
+     * @author k
+     */
     @Transactional
     @Override
-    public int setCard(BubblingUserCard card) throws Exception {
+    public int setCard(String userPhone, BubblingUserCard card) throws Exception {
         Map<String, Object> map;
         map=ReflectUtil.getObjectValue(card);
+        if(map.get(userPhone)!=null)
+            map.replace("userPhone", userPhone);
+        else map.put("userPhone", userPhone);
         userMapper.deleteCardInfo(map);
         return userMapper.insertCardInfo(map);
     }
 
     @Override
-    public int userPartiActivity(String partiNo, String activityNo) {
+    public int userPartiActivity(String userPhone, String activityId) {
         Map<String, String> map = new HashMap<>();
-        map.put("partiNo", partiNo);
-        map.put("activityNo", activityNo);
+        map.put("userPhone", userPhone);
+        map.put("activityId", activityId);
         return userMapper.userPartiActivity(map);
     }
 
     @Override
-    public int userQuitActivity(String partiNo, String activityNo) {
+    public int userQuitActivity(String userPhone, String activityId) {
         Map<String, String> map = new HashMap<>();
-        map.put("partiNo", partiNo);
-        map.put("activityNo", activityNo);
+        map.put("userPhone", userPhone);
+        map.put("activityId", activityId);
         return userMapper.userQuitActivity(map);
     }
 

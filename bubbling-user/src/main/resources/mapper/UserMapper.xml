@@ -29,7 +29,7 @@
     <select id="getCardInfo" resultMap="CardMap">
         select *
         from user_card_info
-        where `state`=0 and `userphone`={userPhone}
+        where `state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getPartiActivityList" resultType="Map">
         select *
@@ -46,11 +46,11 @@
         where `userphone`=#{userPhone}
     </update>
     <insert id="userPartiActivity">
-        insert into parti_activity(`parti_no`,`activity_no`)
-        values (#{partiNo},#{activityId})
+        insert into parti_activity(`userphone`,`activityid`)
+        values (#{userPhone},#{activityId})
     </insert>
     <update id="userQuitActivity">
-        update parti_activity(`parti_no`,`activity_no`)
+        update parti_activity
         set `state`=2
         where `userphone`=#{userPhone} and `activityid`=#{activityId}
     </update>

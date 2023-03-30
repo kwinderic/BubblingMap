@@ -14,8 +14,8 @@ public interface UserService {
     Map<String,String> getUserInfo(String userPhone);
     BubblingUserCard getCardInfo(String userPhone);
     List<Map<String,String>> getPartiActivityList(String userPhone);
-    int setCard(BubblingUserCard card) throws Exception;
-    int userPartiActivity(String partiNo, String activityNo);
-    int userQuitActivity(String partiNo, String activityNo);
+    int setCard(String userPhone, BubblingUserCard card) throws Exception;
+    int userPartiActivity(String userPhone, String activityId);
+    int userQuitActivity(String userPhone, String activityId);
     ArrayList<PointOnMap> getNearbyActivity(String userPhone, double radius, long count);
 }
