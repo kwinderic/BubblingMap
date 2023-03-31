@@ -5,16 +5,24 @@
 
 <mapper namespace="com.bubbling.mapper.AdminMapper">
     <insert id="adminCreateActivity">
-        insert into parti_activity(`parti_no`,`activity_no`,`state`)
-        values (#{partiNo},#{activityNo},1)
+        insert into parti_activity(`userphone`,`activityid`,`state`)
+        values (#{userPhone},#{activityId},1)
     </insert>
     <update id="adminDeleteActivity">
-        update parti_activity(`parti_no`,`activity_no`)
+        update parti_activity
         set `state`=3
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=1
     </update>
     <select id="getCreateActivityList" resultType="Map">
         select *
           from parti_activity
         where `state`=1 and `userphone`=#{userPhone}
+    </select>
+    <select id="selectMaxActivityId" resultType="_int">
+        select max(`activityid`)
+        from (
+            select `activityid`
+            from `activity_base_info`
+        ) idCollection
     </select>
 </mapper>

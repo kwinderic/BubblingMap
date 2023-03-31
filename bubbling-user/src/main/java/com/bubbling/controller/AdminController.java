@@ -31,27 +31,39 @@ public class AdminController {
     private RedisUtil redisUtil;
     private CommonMessage commonMessage;
 
-    @PostMapping("/addactivity/{token}/{activityNo}/{longitude}/{latitude}")
-    public String addActivity(@PathVariable("token") String token, @PathVariable("activityNo") String activityNo,@PathVariable("longitude") String longitude,@PathVariable("latitude") String latitude){
+    @PostMapping("/addactivity/{token}/{activityId}/{longitude}/{latitude}")
+    public String addActivity(@PathVariable("token") String token, @PathVariable("activityId") String activityId,@PathVariable("longitude") String longitude,@PathVariable("latitude") String latitude){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(adminService.adminAddActivity(userPhone, activityNo)==1){
-            redisUtil.geoAdd(ConstantUtil.onlineActivity, new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)), activityNo);
+        if(adminService.adminAddActivity(userPhone, activityId)==1){
+            redisUtil.geoAdd(ConstantUtil.onlineActivity, new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)), activityId);
             commonMessage = new CommonMessage(210, "添加成功");
         }
         else commonMessage = new CommonMessage(211, "添加失败");
         return JSON.toJSONString(commonMessage);
     }
 
-    @PostMapping("/deleteactivity/{token}/{activityNo}")
-    public String deleteActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
+    /**
+     * 删除创建的活动
+     * 【已测试】
+     * 2022-03-20 10:27:20 GMT+8
+     * @author k
+     */
+    @DeleteMapping("/deleteactivity/{token}/{activityId}")
+    public String deleteActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        redisUtil.geoRemove(ConstantUtil.onlineActivity,activityNo);
-        if(adminService.adminDeleteActivity(userPhone, activityNo)==1)
+        redisUtil.geoRemove(ConstantUtil.onlineActivity,activityId);
+        if(adminService.adminDeleteActivity(userPhone, activityId)==1)
             commonMessage = new CommonMessage(210, "删除成功");
-        else commonMessage = new CommonMessage(211, "添加失败");
+        else commonMessage = new CommonMessage(211, "删除失败");
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 获取创建的活动列表
+     * 【已测试】
+     * 2022-03-20 10:41:57 GMT+8
+     * @author k
+     */
     @GetMapping("/getactivitylist/{token}")
     public String getActivityList(@PathVariable("token") String token){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");

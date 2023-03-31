@@ -73,7 +73,7 @@ public class UserController {
     @GetMapping("/getbaseinfo/{token}")
     public String getBaseInfo(@PathVariable("token") String token){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        Map<String,String> map = userService.getUserInfo(userPhone);
+        Map<String,String> map = userService.getUserBaseInfo(userPhone);
         commonMessage = new CommonMessage(210, "获取成功", map);
         return JSON.toJSONString(commonMessage);
     }
@@ -132,13 +132,13 @@ public class UserController {
     @GetMapping("/getcardinfo/{token}")
     public String getCardInfo(@PathVariable("token") String token){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        BubblingUserCard card = userService.getCardInfo(userPhone);
+        BubblingUserCard card = userService.getUserCardInfo(userPhone);
         commonMessage = new CommonMessage(210, "获取成功", card);
         return JSON.toJSONString(commonMessage);
     }
 
     /**
-     * 根据token获取参与的活动的id列表
+     * 根据token获取参与的活动列表
      * 【已测试】
      * 2022-03-19 20:52:19 GMT+8
      * @author k
@@ -187,10 +187,10 @@ public class UserController {
      * 2022-03-19 21:10:33 GMT+8
      * @author k
      */
-    @DeleteMapping("/quitactivity/{token}/{activityNo}"
-    public String quitActivity(@PathVariable("token") String token,@PathVariable("activityNo") String activityNo){
+    @DeleteMapping("/quitactivity/{token}/{activityId}")
+    public String quitActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(userService.userQuitActivity(userPhone, activityNo)==1)
+        if(userService.userQuitActivity(userPhone, activityId)==1)
             commonMessage = new CommonMessage(210, "删除成功");
         else commonMessage = new CommonMessage(211, "删除失败");
         return JSON.toJSONString(commonMessage);

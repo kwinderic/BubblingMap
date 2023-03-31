@@ -10,4 +10,5 @@ public interface AdminMapper {
     List<Map<String,String>> getCreateActivityList(Map<String,String> map);
     int adminCreateActivity(Map<String,String> map);
     int adminDeleteActivity(Map<String,String> map);
+    int selectMaxActivityId();
 }

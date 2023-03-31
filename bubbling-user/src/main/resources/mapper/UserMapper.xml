@@ -21,12 +21,12 @@
         from user_base_info
         where `state`=0 and `userphone`=#{userPhone}
     </select>
-    <select id="getUserInfo" resultType="Map">
+    <select id="getUserBaseInfo" resultType="Map">
         select `userphone`,`nickname`
         from user_base_info
         where `state`=0 and `userphone`=#{userPhone}
     </select>
-    <select id="getCardInfo" resultMap="CardMap">
+    <select id="getUserCardInfo" resultMap="CardMap">
         select *
         from user_card_info
         where `state`=0 and `userphone`=#{userPhone}

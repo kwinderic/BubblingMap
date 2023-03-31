@@ -14,18 +14,18 @@ public class AdminServiceImpl implements AdminService{
     private AdminMapper adminMapper;
 
     @Override
-    public int adminAddActivity(String partiNo, String activityNo) {
+    public int adminAddActivity(String userPhone, String activityId) {
         Map<String, String> map = new HashMap<>();
-        map.put("partiNo", partiNo);
-        map.put("activityNo", activityNo);
+        map.put("userPhone", userPhone);
+        map.put("activityId", activityId);
         return adminMapper.adminCreateActivity(map);
     }
 
     @Override
-    public int adminDeleteActivity(String partiNo, String activityNo) {
+    public int adminDeleteActivity(String userPhone, String activityId) {
         Map<String, String> map = new HashMap<>();
-        map.put("partiNo", partiNo);
-        map.put("activityNo", activityNo);
+        map.put("userPhone", userPhone);
+        map.put("activityId", activityId);
         return adminMapper.adminDeleteActivity(map);
     }
 

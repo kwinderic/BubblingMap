@@ -15,10 +15,10 @@ public class TeamServiceImpl implements TeamService{
     private TeamMapper teamMapper;
 
     @Override
-    public int addTeam(String teamId,String teamName,String intro) {
+    public int addTeam(String userPhone,String teamId,String intro) {
         Map<String, String> map = new HashMap<>();
+        map.put("userPhone",userPhone);
         map.put("teamId",teamId);
-        map.put("teamName",teamName);
         map.put("intro",intro);
         return teamMapper.createTeam(map);
     }

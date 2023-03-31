@@ -47,17 +47,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<String,String> getUserInfo(String userPhone) {
+    public Map<String,String> getUserBaseInfo(String userPhone) {
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
-        return userMapper.getUserInfo(map);
+        return userMapper.getUserBaseInfo(map);
     }
 
     @Override
-    public BubblingUserCard getCardInfo(String userPhone) {
+    public BubblingUserCard getUserCardInfo(String userPhone) {
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
-        return userMapper.getCardInfo(map);
+        return userMapper.getUserCardInfo(map);
     }
 
     @Override

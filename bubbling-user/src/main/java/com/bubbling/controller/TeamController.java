@@ -27,10 +27,10 @@ public class TeamController {
         return JSON.toJSONString(commonMessage);
     }
 
-    @DeleteMapping("/deleteteam/{token}/{teamNo}")
-    public String quitTeam(@PathVariable("token") String token,@PathVariable("teamName") String teamName,String intro){
+    @DeleteMapping("/quitteam/{token}/{teamId}")
+    public String quitTeam(@PathVariable("token") String token,@PathVariable("teamId") String teamId,String intro){
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(teamService.addTeam(userPhone,teamName,intro)==1)
+        if(teamService.addTeam(userPhone,teamId,intro)==1)
             commonMessage = new CommonMessage(210, "添加成功");
         else commonMessage = new CommonMessage(211, "添加失败");
         return JSON.toJSONString(commonMessage);

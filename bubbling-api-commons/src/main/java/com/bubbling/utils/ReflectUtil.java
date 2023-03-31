@@ -24,7 +24,7 @@ public class ReflectUtil {
                 // 类型是String
                 if (field.getGenericType().toString().equals(
                         "class java.lang.String")) { // 如果type是类类型，则前面包含"class "，后面跟类名
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     String val = (String) m.invoke(object);
                     if (val != null) {
@@ -34,7 +34,7 @@ public class ReflectUtil {
                 // 类型是Integer
                 if (field.getGenericType().toString().equals(
                         "class java.lang.Integer")) {
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     Integer val = (Integer) m.invoke(object);
                     if (val != null) {
@@ -44,7 +44,7 @@ public class ReflectUtil {
                 // 类型是Double
                 if (field.getGenericType().toString().equals(
                         "class java.lang.Double")) {
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     Double val = (Double) m.invoke(object);
                     if (val != null) {
@@ -54,7 +54,7 @@ public class ReflectUtil {
                 // 类型是Date
                 if (field.getGenericType().toString().equals(
                         "class java.util.Date")) {
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     Date val = (Date) m.invoke(object);
                     if (val != null) {
@@ -64,15 +64,15 @@ public class ReflectUtil {
                 // 类型是int
                 if (field.getGenericType().toString().equals(
                         "int")) {
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     int val = (int) m.invoke(object);
                     map.put(field.getName(),val);
                 }
-                //类型是double
+                // 类型是double
                 if (field.getGenericType().toString().equals(
                         "double")) {
-                    Method m = (Method) object.getClass().getMethod(
+                    Method m = object.getClass().getMethod(
                             "get" + getMethodName(field.getName()));
                     double val = (double) m.invoke(object);
                     map.put(field.getName(),val);

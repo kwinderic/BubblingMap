@@ -10,8 +10,8 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
     BubblingUser queryUserByPhone(Map<String,String> map);
-    Map<String,String> getUserInfo(Map<String,String> map);
-    BubblingUserCard getCardInfo(Map<String,String> map);
+    Map<String,String> getUserBaseInfo(Map<String,String> map);
+    BubblingUserCard getUserCardInfo(Map<String,String> map);
     List<Map<String,String>> getPartiActivityList(Map<String,String> map);
     int insertCardInfo(Map<String,Object> map);
     int deleteCardInfo(Map<String,Object> map);
