@@ -10,6 +10,7 @@ import com.bubbling.pojo.ActivityUserLocation;
 import com.bubbling.pojo.BubblingActInfo;
 import com.bubbling.pojo.UserTaskState;
 import com.bubbling.service.ActivityService;
+import com.bubbling.service.UserServiceConsumer;
 import com.bubbling.utils.JWTUtil;
 import com.bubbling.utils.ReflectUtil;
 import com.sun.media.sound.SoftTuning;
@@ -34,6 +35,9 @@ public class ActivityController {
     private ActivityService activityService;
 
     private CommonMessage commonMessage;
+
+    @Autowired
+    private UserServiceConsumer userServiceConsumer;
 
 
     @PostMapping("/createtask/{token}")
@@ -104,6 +108,8 @@ public class ActivityController {
         map = ReflectUtil.getObjectValue(bubblingActInfo);
         System.out.println(map);
         activityService.createActivity(map);
+        System.out.println(map.get("activityId").toString());
+        userServiceConsumer.addActivity(token,map.get("activityId").toString(),map.get("longitude").toString(),map.get("latitude").toString());
         commonMessage = new CommonMessage(200,"活动发起成功");
         return JSON.toJSONString(commonMessage);
     }

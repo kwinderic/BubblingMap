@@ -147,7 +147,7 @@
     </insert>
 
     <select id="activityNum" resultType="_int">
-        select max(activityId)
+        select count(activityId)
         from activity;
     </select>
 </mapper>

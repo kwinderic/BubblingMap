@@ -14,7 +14,7 @@
     </update>
     <select id="getCreateActivityList" resultType="Map">
         select *
-        from parti_activity
+          from parti_activity
         where `state`=1 and `userphone`=#{userPhone}
     </select>
 </mapper>

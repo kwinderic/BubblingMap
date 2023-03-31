@@ -11,7 +11,11 @@ public interface UserServiceConsumer {
     @PostMapping("/user/login/{userPhone}/{password}/{longitude}/{latitude}")
     String login(@PathVariable("userPhone") String userPhone, @PathVariable("password") String password, @PathVariable("longitude") String longitude, @PathVariable("latitude") String latitude);
 
+//    @PostMapping("/user/partiactivity/{token}/{activityId}")
+//    String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId);
 
+    @PostMapping("/admin/addactivity/{token}/{activityNo}/{longitude}/{latitude}")
+    String addActivity(@PathVariable("token") String token, @PathVariable("activityNo") String activityNo,@PathVariable("longitude") String longitude,@PathVariable("latitude") String latitude);
 }
 
 
