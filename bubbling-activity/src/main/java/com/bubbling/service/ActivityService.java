@@ -15,7 +15,6 @@ public interface ActivityService {
 //    int eraseTask(Map<String,String> map);
 //    int alterTask(Map<String,String> map);
     int alterUserTaskState(Map<String,Object> map);
-    int createTask(Map<String,Object> map);
     List<Map<String,Object>> showActivities(Map<String,Object> map);
 //    List<Map<String,String>> alterUserActProgress(Map<String,String> map);
     List<Map<String,Object>> activityRun(Map<String,Object> map);
@@ -24,6 +23,6 @@ public interface ActivityService {
 //    int userExitAct(Map<String,String> map);
 //    int userSuspendAct(Map<String,String> map);
 //    int userCompleteAct(Map<String,String> map);
-    int createActivity(Map<String,Object> map);
+    int createActivity(Map<String,Object> map,List<Map<String,Object>> maps);
     List<Map<String,Object>> showUserTaskState(Map<String,Object> map);
 }

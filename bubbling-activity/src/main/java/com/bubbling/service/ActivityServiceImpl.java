@@ -5,7 +5,9 @@ import com.bubbling.mapper.ActivityMapper;
 import jdk.internal.dynalink.linker.LinkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ public class ActivityServiceImpl implements ActivityService{
         return activityMapper.recordUserLocation(map);
     }
 
+    @Transactional
     @Override
     public List<Map<String, Object>> showActTask(Map<String, Object> map) {
         if(activityMapper.actRunState(map) == 1){
@@ -35,10 +38,6 @@ public class ActivityServiceImpl implements ActivityService{
 //
 //    }
 
-    @Override
-    public int createTask(Map<String,Object> map){
-        return activityMapper.addTask(map);
-    }
 
     /**
      * 展示所有活动
@@ -49,9 +48,9 @@ public class ActivityServiceImpl implements ActivityService{
     }
 
 
+    @Transactional
     @Override
     public int alterUserTaskState(Map<String,Object> map) {
-        map.forEach((k,v)-> System.out.println(k+" "+v));
         if (activityMapper.actRunState(map) != 0 && activityMapper.actRunState(map) != 2) {
             return 1;
         } else if (activityMapper.actRunState(map) != 2) {
@@ -68,6 +67,7 @@ public class ActivityServiceImpl implements ActivityService{
     }
 
 
+    @Transactional
     @Override
     public List<Map<String, Object>> activityRun(Map<String, Object> map) {
         List<Map<String,Object>> list = activityMapper.actShouldRun(map);
@@ -75,6 +75,7 @@ public class ActivityServiceImpl implements ActivityService{
         return list;
     }
 
+    @Transactional
     @Override
     public List<Map<String, Object>> activityFinish(Map<String, Object> map) {
         List<Map<String,Object>> list = activityMapper.actShouldFinish(map);
@@ -82,12 +83,21 @@ public class ActivityServiceImpl implements ActivityService{
         return list;
     }
 
+    @Transactional
     @Override
-    public int createActivity(Map<String, Object> map) {
-        map.put("activityId",activityMapper.activityNum(map)+1);
-        return activityMapper.createActivity(map);
+    public int createActivity(Map<String, Object> map, List<Map<String, Object>> maps) {
+        int newActivityId = activityMapper.activityNum(map)+1;
+        map.put("activityId",newActivityId);
+        activityMapper.createActivity(map);
+        for (Map<String, Object> stringObjectMap : maps) {
+            stringObjectMap.put("activityId",newActivityId);
+        }
+        activityMapper.createTask(maps);
+        return 0;
     }
 
+
+    @Transactional
     @Override
     public List<Map<String, Object>> showUserTaskState(Map<String, Object> map) {
         if(activityMapper.actRunState(map) == 2 || activityMapper.userPartiState(map) == 2){

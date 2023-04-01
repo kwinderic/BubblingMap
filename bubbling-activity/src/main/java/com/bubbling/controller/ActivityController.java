@@ -1,27 +1,18 @@
 package com.bubbling.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
-import com.auth0.jwt.exceptions.SignatureGenerationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.bubbling.dto.CommonMessage;
 import com.bubbling.pojo.ActivityTask;
-import com.bubbling.pojo.ActivityUserLocation;
 import com.bubbling.pojo.BubblingActInfo;
 import com.bubbling.pojo.UserTaskState;
 import com.bubbling.service.ActivityService;
 import com.bubbling.service.UserServiceConsumer;
 import com.bubbling.utils.JWTUtil;
 import com.bubbling.utils.ReflectUtil;
-import com.sun.media.sound.SoftTuning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.StandardEmitterMBean;
-import javax.swing.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/activity")
@@ -40,17 +31,12 @@ public class ActivityController {
     private UserServiceConsumer userServiceConsumer;
 
 
-    @PostMapping("/createtask/{token}")
-    public String addTask(@PathVariable("token") String token, ActivityTask activityTask) throws Exception {
-        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        Map<String,Object> map;
-        map = ReflectUtil.getObjectValue(activityTask);
-        map.put("userPhone",userPhone);
-        int state = activityService.createTask(map);
-        commonMessage = new CommonMessage(200,"添加成功");
-        return JSON.toJSONString(commonMessage);
-    }
-
+    /**
+     * 展示所有的活动 【已测试】
+     * @param token
+     * @return BubblingActInfo
+     * @author lzh
+     */
     @GetMapping("/showactivities/{token}")
     public String showActivities(@PathVariable("token") String token) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -60,6 +46,13 @@ public class ActivityController {
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 修改用户任务完成状态 【已测试】
+     * @param token
+     * @param userTaskState
+     * @date 2022-03-20 18:50:36
+     * @author lzh
+     */
     @PostMapping("/alterusertaskstate/{token}")
     public String alterUserTaskState(@PathVariable("token") String token , UserTaskState userTaskState) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -101,19 +94,36 @@ public class ActivityController {
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     *发起活动  【已测试】
+     * @param token
+     * @param
+     * @date 2022-03-20 22:04:07
+     * @author lzh
+     */
     @PostMapping("/createactivity/{token}")
-    public String createActivity(@PathVariable("token") String token,BubblingActInfo bubblingActInfo) throws Exception {
+    public String createActivity(@PathVariable("token") String token,@RequestBody BubblingActInfo bubblingActInfo) throws Exception {
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         Map<String,Object> map;
         map = ReflectUtil.getObjectValue(bubblingActInfo);
-        System.out.println(map);
-        activityService.createActivity(map);
-        System.out.println(map.get("activityId").toString());
+        List<Map<String,Object>> maps= new ArrayList<>();
+        for (ActivityTask activityTask : bubblingActInfo.getTask()) {
+            maps.add(ReflectUtil.getObjectValue(activityTask));
+        }
+        System.out.println(maps);
+        activityService.createActivity(map,maps);
         userServiceConsumer.addActivity(token,map.get("activityId").toString(),map.get("longitude").toString(),map.get("latitude").toString());
         commonMessage = new CommonMessage(200,"活动发起成功");
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 返回活动的所有任务点   【已测试】
+     * @param token
+     * @param activityId
+     * @date 2022-03-20 18:42:31
+     * @author lzh
+     */
     @GetMapping("/showacttask/{token}/{activityid}")
     public String showActTask(@PathVariable("token") String token,@PathVariable("activityid") String activityId) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -128,6 +138,13 @@ public class ActivityController {
         return JSON.toJSONString(commonMessage);
     }
 
+    /**
+     * 返回用户任务完成状态   【已测试】
+     * @param token
+     * @param activityId
+     * @date 2022-03-20 18:44:17
+     * @author lzh
+     */
     @GetMapping("/showusertaskstate/{token}/{activityid}")
     public String showUserTaskState(@PathVariable("token") String token,@PathVariable("activityid") String activityId ) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
@@ -137,7 +154,6 @@ public class ActivityController {
         if(activityService.showUserTaskState(map) == null){
             commonMessage = new CommonMessage(311,"活动不存在或者用户未参加活动或者不存在任务点",null);
         }else{
-            System.out.println(map);
             commonMessage = new CommonMessage(200,"返回用户任务点状态",activityService.showUserTaskState(map));
         }
         return JSON.toJSONString(commonMessage);

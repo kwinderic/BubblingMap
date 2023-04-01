@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 2022-03-03 15:36:20 GMT+8
@@ -30,4 +31,5 @@ public class BubblingActInfo {
     private Date createTime;
     private Date updateTime;
     private int state;
+    private List<ActivityTask> task;
 }

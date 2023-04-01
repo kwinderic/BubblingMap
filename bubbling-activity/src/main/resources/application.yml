@@ -13,6 +13,9 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  redis:
+    host: 121.5.76.140
+    password: bubbling123456
 
 mybatis:
   type-aliases-package: com.bubbling.pojo

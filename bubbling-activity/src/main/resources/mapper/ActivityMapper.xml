@@ -34,9 +34,23 @@
         where `activityid` =#{activityId} and `state` = 0;
     </select>
 
+    <insert id="createTask" parameterType="java.util.List">
+            insert into act_task (`activityid`,`taskid`,`premise`,`longitude`,`latitude`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+             #{item.activityId},
+             #{item.taskId},
+             #{item.premise},
+             #{item.longitude},
+             #{item.latitude}
+            )
+        </foreach>
+    </insert>
+
     <insert id="addTask">
         insert into act_task (`activityid`,`taskid`,`premise`)
-        values (#{activityId},#{taskId},#{premise},#{state});
+        values (#{activityId},#{taskId},#{premise});
     </insert>
 
     <update id="eraseTask">
