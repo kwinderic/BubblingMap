@@ -9,8 +9,6 @@
     </parent>
 
     <artifactId>bubbling-user</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bubbling-user</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
