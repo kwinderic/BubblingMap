@@ -3,6 +3,7 @@ package com.bubbling.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.w3c.dom.ls.LSInput;
 
+import javax.management.ObjectName;
 import java.util.List;
 import java.util.Map;
 
@@ -12,17 +13,17 @@ public interface ActivityMapper {
     List<Map<String,Object>> showActivities(Map<String,Object> map);
     int createActivity(Map<String,Object> map);
     int activityNum(Map<String,Object> map);
-    int recordUserLocation(Map<String, String> map);
+    int recordUserLocation(Map<String,Object> map);
     int eraseUserLocation(Map<String,String> map);
-    List<Map<String,String>> queryUserLocation(Map<String,String> map);
-    List<Map<String,String>> queryAllUserLocation(Map<String,String> map);
+    List<Map<String,Object>> showUserLocation(Map<String,Object> map);
+    List<Map<String,Object>> showAllUserLocation(Map<String,Object> map);
     List<Map<String,Object>> showActTask(Map<String,Object> map);
     int addTask(Map<String,Object> map);
     int createTask(List<Map<String,Object>> maps);
-    int eraseTask(Map<String,String> map);
-    int alterTask(Map<String,String> map);
+    int eraseTask(Map<String,Object> map);
+    int alterTask(Map<String,Object> map);
     int alterUserTaskState(Map<String, Object> map);
-    int alterUserActState(Map<String,String> map);
+    int alterUserActProgress(Map<String,Object> map);
     int actRunState(Map<String,Object> map);
     int userPartiState(Map<String,Object> map);
     int userRunState(Map<String,Object> map);
@@ -36,4 +37,5 @@ public interface ActivityMapper {
     int userFinishAct(Map<String,String> map);
     int userContinueAct(Map<String,String> map);
     List<Map<String,Object>> showUserTaskState(Map<String,Object> map);
+    int alterActInfo(Map<String, Object> map);
 }

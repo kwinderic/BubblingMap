@@ -18,9 +18,22 @@ public class ActivityServiceImpl implements ActivityService{
     @Autowired
     private ActivityMapper activityMapper;
 
+    @Transactional
     @Override
-    public int recordUserLocation(Map<String, String> map) {
-        return activityMapper.recordUserLocation(map);
+    public int recordUserLocation(Map<String, Object> map) {
+        if (activityMapper.actRunState(map) != 0 && activityMapper.actRunState(map) != 2) {
+            return 1;
+        } else if (activityMapper.actRunState(map) != 2) {
+            return 2;
+        } else if (activityMapper.userPartiState(map) == 2 || activityMapper.userPartiState(map) == 3) {
+            return 3;
+        }
+//        else if (activityMapper.userRunState(map) != 1) {
+//            return 4;
+//        }
+        else {
+            return -1 * activityMapper.recordUserLocation(map);
+        }
     }
 
     @Transactional
@@ -30,6 +43,48 @@ public class ActivityServiceImpl implements ActivityService{
             return null;
         }else{
             return activityMapper.showActTask(map);
+        }
+    }
+
+    @Transactional
+    @Override
+    public int addTask(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.actRunState(map) == 3){
+            return 2;
+        }else if(activityMapper.userPartiState(map) != 1){
+            return 3;
+        }else {
+            return -1*activityMapper.addTask(map);
+        }
+    }
+
+    @Transactional
+    @Override
+    public int eraseTask(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.actRunState(map) == 3){
+            return 2;
+        }else if(activityMapper.userPartiState(map) != 1){
+            return 3;
+        }else {
+            return -1*activityMapper.eraseTask(map);
+        }
+    }
+
+    @Transactional
+    @Override
+    public int alterTask(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.actRunState(map) == 3){
+            return 2;
+        }else if(activityMapper.userPartiState(map) != 1){
+            return 3;
+        }else {
+            return -1*activityMapper.alterTask(map);
         }
     }
 
@@ -45,6 +100,18 @@ public class ActivityServiceImpl implements ActivityService{
     @Override
     public List<Map<String,Object>> showActivities(Map<String,Object> map){
         return activityMapper.showActivities(map);
+    }
+
+    @Transactional
+    @Override
+    public int alterUserActProgress(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.actRunState(map) == 3){
+            return 2;
+        }else{
+            return -1*activityMapper.alterUserActProgress(map);
+        }
     }
 
 
@@ -106,5 +173,36 @@ public class ActivityServiceImpl implements ActivityService{
             return activityMapper.showUserTaskState(map);
         }
     }
+
+    @Transactional
+    @Override
+    public int alterActInfo(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.actRunState(map) == 3){
+            return 2;
+        }else if(activityMapper.userPartiState(map) != 1){
+            return 3;
+        }else {
+            return -1*activityMapper.alterActInfo(map);
+        }
+    }
+
+    @Transactional
+    @Override
+    public List<Map<String,Object>> showUserLocation(Map<String,Object> map){
+        return activityMapper.showUserLocation(map);
+    }
+
+    @Transactional
+    @Override
+    public List<Map<String, Object>> showAllUserLocation(Map<String, Object> map) {
+        if(activityMapper.userPartiState(map) != 1){
+            return null;
+        }else{
+            return activityMapper.showAllUserLocation(map);
+        }
+    }
+
 
 }

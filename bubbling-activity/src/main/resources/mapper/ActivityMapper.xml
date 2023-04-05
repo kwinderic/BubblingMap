@@ -6,8 +6,8 @@
 <mapper namespace="com.bubbling.mapper.ActivityMapper">
 
     <insert id="recordUserLocation">
-        insert into act_location (`activityNo`,`userphone`,`longitude`,`latitude`)
-        values (#{activityId},#{userPhone},#{longitude},#{latitude});
+        insert into act_location (`activityid`,`userphone`,`longitude`,`latitude`,`time`)
+        values (#{activityId},#{userPhone},#{longitude},#{latitude},#{time});
     </insert>
 
     <update id="eraseUserLocation">
@@ -16,16 +16,16 @@
         where `activityid` = #{activityId} and `userphone` = #{userPhone};
     </update>
 
-    <select id="queryUserLocation" resultType="ActivityUserLocation">
+    <select id="showUserLocation" resultType="ActivityUserLocation">
         select *
         from act_location
-        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `state` = 0;
     </select>
 
-    <select id="queryAllUserLocation" resultType="ActivityUserLocation">
+    <select id="showAllUserLocation" resultType="ActivityUserLocation">
         select *
         from act_location
-        where `activityid` = #{activityId};
+        where `activityid` = #{activityId} and `state` = 0;
     </select>
 
     <select id="showActTask" resultType="ActivityTask">
@@ -49,20 +49,20 @@
     </insert>
 
     <insert id="addTask">
-        insert into act_task (`activityid`,`taskid`,`premise`)
-        values (#{activityId},#{taskId},#{premise});
+        insert into act_task (`activityid`,`taskid`,`premise`,`longitude`,`latitude`)
+        values (#{activityId},#{taskId},#{premise},#{longitude},#{latitude});
     </insert>
 
     <update id="eraseTask">
         update act_task
         set `state` = 1
-        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `taskid` = #{taskId};
+        where `activityid` = #{activityId} and `taskid` = #{taskId};
     </update>
 
     <update id="alterTask">
         update act_task
-        set  premise = #{premise}
-        where `activityid` = #{activityId} and `userphone` = #{userPhone} and `taskid` = #{taskId};
+        set  `taskid` = #{taskId},`premise` = #{premise},`longitude`=#{longitude},`latitude`=#{latitude}
+        where `activityid` = #{activityId} and `taskid` = #{taskId};
     </update>
 
     <update id="alterUserTaskState">
@@ -83,15 +83,15 @@
         where `activityid` = #{activityId} and `userphone` = #{userPhone} ;
     </update>
 
-    <select id="actRunState" resultType="_int">
+    <select id="actRunState" resultType="Integer">
         select `state` from activity where `activityid` = #{activityId};
     </select>
 
-    <select id="userPartiState" resultType="_int">
+    <select id="userPartiState" resultType="Integer">
         select `state` from parti_activity where `activityid` = #{activityId} and `userphone` = #{userPhone};
     </select>
 
-    <select id="userRunState" resultType="_int">
+    <select id="userRunState" resultType="Integer">
         select `state` from act_progress where `activityId` = #{activityId} and `userphone` = #{userPhone};
     </select>
 
@@ -160,8 +160,19 @@
         values (#{activityId},#{name},#{startTime},#{endTime},#{place},#{longitude},#{latitude},#{type},#{sponsorName},#{sponsorPhone});
     </insert>
 
-    <select id="activityNum" resultType="_int">
+    <select id="activityNum" resultType="Integer">
         select count(activityId)
         from activity;
     </select>
+    
+    <update id="alterActInfo">
+        update activity
+        set `name` = #{name},`starttime` = #{startTime},`endtime` = #{endTime},`place` = #{place},`longitude` = #{longitude},`latitude` = #{latitude},`type` = #{type},`sponsorname` = #{sponsorName}
+        where `activityid` = #{activityId}
+    </update>
+    
+<!--    <select id="taskNum" resultType="Integer">-->
+<!--        select count(`taskid`)-->
+<!--        from act_task;-->
+<!--    </select>-->
 </mapper>

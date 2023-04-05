@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,6 +22,7 @@ public class ActivityUserLocation {
     private String userPhone;
     private String longitude;
     private String latitude;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date time;
     private int state;
 }

@@ -3,6 +3,7 @@ package com.bubbling.controller;
 import com.alibaba.fastjson.JSON;
 import com.bubbling.dto.CommonMessage;
 import com.bubbling.pojo.ActivityTask;
+import com.bubbling.pojo.ActivityUserLocation;
 import com.bubbling.pojo.BubblingActInfo;
 import com.bubbling.pojo.UserTaskState;
 import com.bubbling.service.ActivityService;
@@ -54,7 +55,7 @@ public class ActivityController {
      * @author lzh
      */
     @PostMapping("/alterusertaskstate/{token}")
-    public String alterUserTaskState(@PathVariable("token") String token , UserTaskState userTaskState) throws Exception{
+    public String alterUserTaskState(@PathVariable("token") String token ,@RequestBody UserTaskState userTaskState) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         Map<String,Object> map;
         map = ReflectUtil.getObjectValue(userTaskState);
@@ -110,6 +111,7 @@ public class ActivityController {
         for (ActivityTask activityTask : bubblingActInfo.getTask()) {
             maps.add(ReflectUtil.getObjectValue(activityTask));
         }
+        map.replace("sponsorPhone",userPhone);
         System.out.println(maps);
         activityService.createActivity(map,maps);
         userServiceConsumer.addActivity(token,map.get("activityId").toString(),map.get("longitude").toString(),map.get("latitude").toString());
@@ -155,6 +157,198 @@ public class ActivityController {
             commonMessage = new CommonMessage(311,"活动不存在或者用户未参加活动或者不存在任务点",null);
         }else{
             commonMessage = new CommonMessage(200,"返回用户任务点状态",activityService.showUserTaskState(map));
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 记录用户坐标-时间 【已测试】
+     * @param token
+     * @param activityUserLocation
+     * @date 2022-03-26 15:50:47
+     * @author lzh
+     */
+    @PostMapping("/recorduserlocation/{token}")
+    public String recordUserLocation(@PathVariable("token") String token,@RequestBody ActivityUserLocation activityUserLocation) throws Exception {
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = ReflectUtil.getObjectValue(activityUserLocation);
+        map.put("userPhone",userPhone);
+        int state = activityService.recordUserLocation(map);
+        if(state == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(state == 2){
+            commonMessage = new CommonMessage(312,"活动不正在进行");
+        }else if(state == 3){
+            commonMessage = new CommonMessage(313,"用户未参加活动");
+        }else if(state == 4){
+            commonMessage = new CommonMessage(314,"用户已经暂停/结束/退出");
+        }else{
+            commonMessage = new CommonMessage(200,"记录成功");
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 展示用户自己参加的某一个活动的所有记录的坐标 【已测试】
+     * @param token
+     * @token 2022-03-26 15:59:03
+     * @author lzh
+     */
+    @GetMapping("/showuserlocation/{token}/{activityId}")
+    public String showUserLocation(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activityId);
+        commonMessage = new CommonMessage(200,"返回了本次活动中自己的所有坐标",activityService.showUserLocation(map));
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 活动创建者查看该活动所有用户的所有坐标 【已测试】
+     * @param token
+     * @param activityId
+     * @return
+     */
+    @GetMapping("/showalluserlocation/{token}/{activityId}")
+    public String showAllUserLocation(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activityId);
+        if(activityService.showAllUserLocation(map) == null ){
+            commonMessage = new CommonMessage(311,"无权限，或者无数据");
+        }else{
+            commonMessage = new CommonMessage(200,"返回了本次活动中所有用户的坐标",activityService.showAllUserLocation(map));
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 修改活动信息 【已测试】
+     * @param token
+     * @param bubblingActInfo
+     * @date 2022-03-26 20:03:04
+     * @author lzh
+     */
+    @PostMapping("/alteractinfo/{token}")
+    public String alterActInfo(@PathVariable("token") String token,@RequestBody BubblingActInfo bubblingActInfo) throws Exception {
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = ReflectUtil.getObjectValue(bubblingActInfo);
+        map.put("userPhone",userPhone);
+        int state = activityService.alterActInfo(map);
+        if(state == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(state == 2){
+            commonMessage = new CommonMessage(312,"活动已经结束");
+        }else if(state == 3){
+            commonMessage = new CommonMessage(313,"不为活动创建者，无权限");
+        }else{
+            commonMessage = new CommonMessage(200,"修改成功");
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 添加任务 【已测试】
+     * @param token
+     * @param activityTask
+     * @date 2022-03-26 20:05:19
+     * @author lzh
+     */
+    @PostMapping("/addtask/{token}")
+    public String addTask(@PathVariable("token") String token,@RequestBody ActivityTask activityTask) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = ReflectUtil.getObjectValue(activityTask);
+        map.put("userPhone",userPhone);
+        int state = activityService.addTask(map);
+        if(state == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(state == 2){
+            commonMessage = new CommonMessage(312,"活动已经结束");
+        }else if(state == 3){
+            commonMessage = new CommonMessage(313,"不为活动创建者，无权限");
+        }else{
+            commonMessage = new CommonMessage(200,"任务添加成功");
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 删除任务 【已测试】
+     * @param token
+     * @param activityId
+     * @param taskId
+     * @date 2022-03-26 20:25:22
+     * @author lzh
+     */
+    @PostMapping("/erasetask/{token}/{activityId}/{taskId}")
+    public String eraseTask(@PathVariable("token") String token,@PathVariable("activityId") String activityId,@PathVariable("taskId") String taskId) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activityId);
+        map.put("taskId",taskId);
+        int state = activityService.eraseTask(map);
+        if(state == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(state == 2){
+            commonMessage = new CommonMessage(312,"活动已经结束");
+        }else if(state == 3){
+            commonMessage = new CommonMessage(313,"不为活动创建者，无权限");
+        }else{
+            commonMessage = new CommonMessage(200,"任务删除成功");
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 修改任务信息 【已测试】
+     * @param token
+     * @param activityTask
+     * @date 2022-03-26 20:33:34
+     * @author lzh
+     */
+    @PostMapping("/altertask/{token}")
+    public String alterTask(@PathVariable("token") String token,@RequestBody ActivityTask activityTask) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = ReflectUtil.getObjectValue(activityTask);
+        map.put("userPhone",userPhone);
+        int state = activityService.alterTask(map);
+        if(state == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(state == 2){
+            commonMessage = new CommonMessage(312,"活动已经结束");
+        }else if(state == 3){
+            commonMessage = new CommonMessage(313,"不为活动创建者，无权限");
+        }else{
+            commonMessage = new CommonMessage(200,"任务修改成功");
+        }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 修改用户在活动中的状态 【已测试】
+     * @param token
+     * @param activtyId
+     * @param state
+     * @date 2022-03-26 20:49:28
+     * @author lzh
+     */
+    @PostMapping("/alteruseractprogress/{token}/{activityId}/{state}")
+    public String alterUserActProgress(@PathVariable("token") String token,@PathVariable("activityId")String activtyId,@PathVariable("state") int state) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activtyId);
+        map.put("state",state);
+        int sstate = activityService.alterUserActProgress(map);
+        if(sstate == 1){
+            commonMessage = new CommonMessage(311,"活动不存在");
+        }else if(sstate == 2){
+            commonMessage = new CommonMessage(312,"活动已经结束");
+        }else {
+            commonMessage = new CommonMessage(200,"用户状态成功");
         }
         return JSON.toJSONString(commonMessage);
     }
