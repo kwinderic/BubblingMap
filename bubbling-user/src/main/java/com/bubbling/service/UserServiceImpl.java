@@ -77,9 +77,7 @@ public class UserServiceImpl implements UserService{
     public int setCard(String userPhone, BubblingUserCard card) throws Exception {
         Map<String, Object> map;
         map=ReflectUtil.getObjectValue(card);
-        if(map.get(userPhone)!=null)
-            map.replace("userPhone", userPhone);
-        else map.put("userPhone", userPhone);
+        map.put("userPhone", userPhone);
         userMapper.deleteCardInfo(map);
         return userMapper.insertCardInfo(map);
     }
