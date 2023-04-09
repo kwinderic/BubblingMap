@@ -41,9 +41,13 @@ public class GlobalLoggerFilter implements GlobalFilter, Ordered {
         log.info("[api] request api: "+method);
 
         if("login".equals(method)){
-            result=chain.filter(exchange);
             log.info("[userPhone] in carry jwt: "+token);
             log.info("[out] response time: "+formatter.format(new Date().getTime()));
+            result=chain.filter(exchange);
+        }else if("register".equals(method)){
+            log.info("[userPhone] in carry jwt: "+token);
+            log.info("[out] response time: "+formatter.format(new Date().getTime()));
+            result=chain.filter(exchange);
         }else {
             try {
                 String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");

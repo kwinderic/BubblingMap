@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
+    String sendVerificationCode(String userPhone) throws Exception;
+    int createUser(String userPhone, String password, String nickname);
     BubblingUser queryUserOnPhoneAndPassword(String userPhone, String password);
     String generateToken(String userPhone);
     Map<String,String> getUserBaseInfo(String userPhone);

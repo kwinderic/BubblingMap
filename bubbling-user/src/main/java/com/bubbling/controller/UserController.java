@@ -1,8 +1,6 @@
 package com.bubbling.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.auth0.jwt.exceptions.SignatureGenerationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.bubbling.dto.CommonMessage;
 import com.bubbling.pojo.BubblingUser;
 import com.bubbling.pojo.BubblingUserCard;
@@ -17,7 +15,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +29,36 @@ public class UserController {
     private CommonMessage commonMessage;
 
     /**
-     * 登录，并返回token
+     * 根据手机号注册, 发送验证码
+     * 【已测试】
+     * 2022-03-23 17:06:08 GMT+8
+     * @author k
+     */
+    @PostMapping("/register/{userPhone}/{type}/{password}/{nickname}/{postCode}")
+    public String register(@PathVariable("userPhone") String userPhone,@PathVariable("password") String password,@PathVariable("type") int type,@PathVariable("nickname") String nickname,@PathVariable("postCode") String postCode) throws Exception {
+        String regex="1[3-9][0-9]{9}";
+        if(!userPhone.matches(regex)){
+            commonMessage = new CommonMessage(401, "非法的电话号码");
+            return JSON.toJSONString(commonMessage);
+        }
+        if(type==1){
+            if(ConstantUtil.enableVerification && !userService.sendVerificationCode(userPhone).isEmpty())
+                commonMessage = new CommonMessage(200, "验证码已发送");
+            else commonMessage = new CommonMessage(201, "验证码发送失败");
+        }else if(type==2){
+            String code = (String) redisUtil.get(ConstantUtil.verificationCode + ":" + userPhone);
+            if(code!=null){
+                if(code.equals(postCode)){
+                    userService.createUser(userPhone,password,nickname);
+                    commonMessage = new CommonMessage(300, "注册成功");
+                }else commonMessage = new CommonMessage(301, "验证码错误");
+            }else commonMessage = new CommonMessage(302, "验证码已过期");
+        }else commonMessage = new CommonMessage(402, "参数错误");
+        return JSON.toJSONString(commonMessage);
+    }
+
+    /**
+     * 登录, 并返回token
      * 【已测试】
      * 2022-03-19 20:17:49 GMT+8
      * @author k
@@ -49,7 +75,7 @@ public class UserController {
     }
 
     /**
-     * 登出，需要密码进行身份验证
+     * 登出, 需要密码进行身份验证
      * 【已测试】
      * 2022-03-19 10:38:37 GMT+8
      * @author k
@@ -158,7 +184,7 @@ public class UserController {
      * @author k
      */
     @PostMapping("/modifycard/{token}")
-    public String modifyCard(@PathVariable("token") String token, BubblingUserCard card) throws Exception{
+    public String modifyCard(@PathVariable("token") String token, @RequestBody BubblingUserCard card) throws Exception{
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         if(userService.setCard(userPhone, card)==1)
             commonMessage = new CommonMessage(210, "修改成功");

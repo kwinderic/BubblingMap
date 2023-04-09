@@ -9,6 +9,8 @@ import java.util.Map;
 
 @Mapper
 public interface UserMapper {
+    int createUser(Map<String,String> map);
+    int insertSendVerificationCodeRecord(Map<String,Object> map);
     BubblingUser queryUserByPhone(Map<String,String> map);
     Map<String,String> getUserBaseInfo(Map<String,String> map);
     BubblingUserCard getUserCardInfo(Map<String,String> map);

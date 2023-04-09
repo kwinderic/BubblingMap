@@ -16,6 +16,14 @@
         <result property="updateTime" column="update_time" />
     </resultMap>
 
+    <insert id="createUser">
+        insert into `user_base_info`(`userphone`,`nickname`,`password`)
+        values (#{userPhone},#{nickname},#{password})
+    </insert>
+    <insert id="insertSendVerificationCodeRecord">
+        insert into `send_sms_status`(`serialno`,`phonenumber`,`fee`,`SessionContext`,`code`,`message`,`isocode`,`requestid`,`verificationcode`)
+        values (#{SerialNo},#{PhoneNumber},#{Fee},#{SessionContext},#{Code},#{Message},#{IsoCode},#{RequestId},#{VerificationCode})
+    </insert>
     <select id="queryUserByPhone" resultMap="UserMap">
         select *
         from user_base_info

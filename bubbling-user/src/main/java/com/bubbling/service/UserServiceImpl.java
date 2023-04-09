@@ -4,11 +4,10 @@ import com.bubbling.mapper.UserMapper;
 import com.bubbling.pojo.BubblingUser;
 import com.bubbling.pojo.BubblingUserCard;
 import com.bubbling.pojo.PointOnMap;
-import com.bubbling.utils.ConstantUtil;
-import com.bubbling.utils.JWTUtil;
-import com.bubbling.utils.RedisUtil;
-import com.bubbling.utils.ReflectUtil;
+import com.bubbling.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Metrics;
@@ -17,17 +16,55 @@ import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private SendSMSUtil SendSMSUtil;
+    @Value("${tencent-cloud.secretId}")
+    private String secretId;
+    @Value("${tencent-cloud.secretKey}")
+    private String secretKey;
+
+    /**
+     * 发送验证码，且异步获取发送后的信息
+     * 【已测试】
+     * 2022-03-24 11:07:34 GMT+8
+     * @throws Exception
+     * @author k
+     */
+    @Override
+    public String sendVerificationCode(String userPhone) throws Exception {
+        Random random = new Random();
+        String verificationCode=String.valueOf(random.nextInt(9000)+1000);
+
+        // 放置在redis缓存中，并设置过期时间
+        redisUtil.set(ConstantUtil.verificationCode+":"+userPhone, verificationCode);
+        redisUtil.expire(ConstantUtil.verificationCode+":"+userPhone, 180);
+
+        // 发送验证码，并记录发送短信的相关信息
+        String result= SendSMSUtil.sendVerificationCode(secretId,secretKey,userPhone,verificationCode);
+        log.info("tencent cloud result: "+result);
+
+        // 异步函数
+        SendSMSUtil.recordSendSMS(result, verificationCode);
+        return result;
+    }
+
+    @Override
+    public int createUser(String userPhone, String password, String nickname) {
+        Map<String, String> map = new HashMap<>();
+        map.put("userPhone", userPhone);
+        map.put("password", password);
+        map.put("nickname", nickname);
+        return userMapper.createUser(map);
+    }
 
     @Override
     public BubblingUser queryUserOnPhoneAndPassword(String userPhone,String password){

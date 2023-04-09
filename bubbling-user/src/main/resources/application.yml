@@ -26,3 +26,7 @@ logging:
     com:
       bubbling:
         mapper: debug
+
+tencent-cloud:
+  secretId:
+  secretKey:

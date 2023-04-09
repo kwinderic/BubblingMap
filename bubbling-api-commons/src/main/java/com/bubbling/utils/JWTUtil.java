@@ -21,7 +21,7 @@ public class JWTUtil {
      * @author k
      */
     public static void setSecretKey(String secretKey){
-        ConstantUtil.secretKey =secretKey;
+        ConstantUtil.JWTSecretKey =secretKey;
     }
     /**
      * 2022-03-04 23:40:49 GMT+8
@@ -35,7 +35,7 @@ public class JWTUtil {
         JWTCreator.Builder builder = JWT.create();
         map.forEach(builder::withClaim);
         return builder.withExpiresAt(instance.getTime()). //指定令牌过期时间
-                sign(Algorithm.HMAC256(ConstantUtil.secretKey));
+                sign(Algorithm.HMAC256(ConstantUtil.JWTSecretKey));
     }
     /**
      * 2022-03-04 23:41:05 GMT+8
@@ -44,6 +44,6 @@ public class JWTUtil {
      * @author k
      */
     public static DecodedJWT verify(String token){
-        return JWT.require(Algorithm.HMAC256(ConstantUtil.secretKey)).build().verify(token);
+        return JWT.require(Algorithm.HMAC256(ConstantUtil.JWTSecretKey)).build().verify(token);
     }
 }
