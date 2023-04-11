@@ -201,9 +201,11 @@ public class UserController {
     @PostMapping("/partiactivity/{token}/{activityId}")
     public String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(userService.userPartiActivity(userPhone, activityId)==1)
+        int returnValue=userService.userPartiActivity(userPhone, activityId);
+        if(returnValue==1)
             commonMessage = new CommonMessage(210, "添加成功");
-        else commonMessage = new CommonMessage(211, "添加失败");
+        else if(returnValue==-1) commonMessage = new CommonMessage(212, "审核中");
+        else commonMessage = new CommonMessage(211, "已参加");
         return JSON.toJSONString(commonMessage);
     }
 

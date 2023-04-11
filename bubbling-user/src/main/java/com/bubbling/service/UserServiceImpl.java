@@ -26,14 +26,14 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private SendSMSUtil SendSMSUtil;
+    private SendSMSUtil sendSMSUtil;
     @Value("${tencent-cloud.secretId}")
     private String secretId;
     @Value("${tencent-cloud.secretKey}")
     private String secretKey;
 
     /**
-     * 发送验证码，且异步获取发送后的信息
+     * 发送验证码，并获取发送后的信息
      * 【已测试】
      * 2022-03-24 11:07:34 GMT+8
      * @throws Exception
@@ -49,11 +49,9 @@ public class UserServiceImpl implements UserService{
         redisUtil.expire(ConstantUtil.verificationCode+":"+userPhone, 180);
 
         // 发送验证码，并记录发送短信的相关信息
-        String result= SendSMSUtil.sendVerificationCode(secretId,secretKey,userPhone,verificationCode);
-        log.info("tencent cloud result: "+result);
-
-        // 异步函数
-        SendSMSUtil.recordSendSMS(result, verificationCode);
+        String result= sendSMSUtil.sendVerificationCode(secretId,secretKey,userPhone,verificationCode);
+        log.info("[tencent cloud] result: "+result);
+        sendSMSUtil.recordSendSMS(result, verificationCode);
         return result;
     }
 
@@ -124,6 +122,16 @@ public class UserServiceImpl implements UserService{
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
         map.put("activityId", activityId);
+        List<Map<String, String>> lists = userMapper.getPartiActivityList(map);
+        for (Map<String, String> list : lists) {
+            if(list.get("activityid").equals(activityId))
+                return 0;
+        }
+        lists=userMapper.getUnderReviewActivityList(map);
+        for (Map<String, String> list : lists) {
+            if(list.get("activityid").equals(activityId))
+                return -1;
+        }
         return userMapper.userPartiActivity(map);
     }
 

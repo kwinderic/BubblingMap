@@ -9,18 +9,19 @@ import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.SmsClient;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Slf4j
 @Component
 public class SendSMSUtil {
     @Autowired
     private UserMapper userMapper;
 
-    public static String sendVerificationCode(String secretId, String secretKey, String phoneNumber, String templateParam) throws TencentCloudSDKException{
+    public String sendVerificationCode(String secretId, String secretKey, String phoneNumber, String templateParam) throws TencentCloudSDKException{
         Credential cred = new Credential(secretId, secretKey);
 
         HttpProfile httpProfile = new HttpProfile();
@@ -49,23 +50,14 @@ public class SendSMSUtil {
         req.setTemplateParamSet(templateParamSet);
 
         String[] phoneNumberSet = {"+86"+phoneNumber};
+        log.info("[phoneNumber]: "+phoneNumber);
         req.setPhoneNumberSet(phoneNumberSet);
-
-//        String sessionContext = "";
-//        req.setSessionContext(sessionContext);
-
-//        String extendCode = "";
-//        req.setExtendCode(extendCode);
-
-//        String senderid = "";
-//        req.setSenderId(senderid);
 
         SendSmsResponse res = client.SendSms(req);
 
         return SendSmsResponse.toJsonString(res);
     }
 
-    @Async
     public Integer recordSendSMS(String result, String verificationCode){
         String json1=result.substring(18, result.indexOf('}')+1);
         String json2="{"+result.substring(result.length()-51);

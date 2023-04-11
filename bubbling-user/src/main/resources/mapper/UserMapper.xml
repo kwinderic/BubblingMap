@@ -40,9 +40,14 @@
         where `state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getPartiActivityList" resultType="Map">
-        select *
+        select `userphone`,`activityid`,`create_time`
         from parti_activity
         where `state`=0 and `userphone`=#{userPhone}
+    </select>
+    <select id="getUnderReviewActivityList" resultType="Map">
+        select `userphone`,`activityid`,`create_time`
+        from parti_activity
+        where `state`=5 and `userphone`=#{userPhone}
     </select>
     <insert id="insertCardInfo">
         insert into user_card_info(`userphone`,`realname`,`gender`,`identitype`,`identityno`,`birthday`,`area`,`relation`,`emergencyphone`)
@@ -54,12 +59,12 @@
         where `userphone`=#{userPhone}
     </update>
     <insert id="userPartiActivity">
-        insert into parti_activity(`userphone`,`activityid`)
-        values (#{userPhone},#{activityId})
+        insert into parti_activity(`userphone`,`activityid`,`state`)
+        values (#{userPhone},#{activityId},5)
     </insert>
     <update id="userQuitActivity">
         update parti_activity
-        set `state`=2
+        set `state`=3
         where `userphone`=#{userPhone} and `activityid`=#{activityId}
     </update>
 </mapper>

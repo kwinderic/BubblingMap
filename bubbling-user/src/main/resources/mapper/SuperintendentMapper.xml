@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubbling.mapper.SuperintendentMapper">
+    <insert id="superintendentCreateActivity">
+        insert into `parti_activity`(`userphone`,`activityid`,`state`)
+        values (#{userPhone},#{activityId},5)
+    </insert>
+    <update id="superintendentDeleteActivity">
+        update `parti_activity`
+        set `state`=3
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=1
+    </update>
+    <select id="getCreateActivityList" resultType="Map">
+        select *
+        from `parti_activity`
+        where `state`=1 and `userphone`=#{userPhone}
+    </select>
+    <select id="getUserApplyList" resultType="Map">
+        select `userphone`,`activityid`,`create_time`
+        from `parti_activity`
+        where `activityid`=#{activityId} and `state`=5
+    </select>
+    <update id="superintendentPassApply">
+        update `parti_activity`
+        set `state`=0
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=5
+    </update>
+    <update id="superintendentRejectApply">
+        update `parti_activity`
+        set `state`=4
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=5
+    </update>
+</mapper>

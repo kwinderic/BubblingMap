@@ -15,6 +15,7 @@ public interface UserMapper {
     Map<String,String> getUserBaseInfo(Map<String,String> map);
     BubblingUserCard getUserCardInfo(Map<String,String> map);
     List<Map<String,String>> getPartiActivityList(Map<String,String> map);
+    List<Map<String,String>> getUnderReviewActivityList(Map<String,String> map);
     int insertCardInfo(Map<String,Object> map);
     int deleteCardInfo(Map<String,Object> map);
     int userPartiActivity(Map<String,String> map);

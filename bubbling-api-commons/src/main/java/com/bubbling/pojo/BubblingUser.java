@@ -23,4 +23,5 @@ public class BubblingUser {
     private Date createTime;
     private Date updateTime;
     private int state;
+    private int authority;
 }
