@@ -52,7 +52,7 @@ public class SuperintendentController {
      * 2022-03-20 10:27:20 GMT+8
      * @author k
      */
-    @DeleteMapping("/deleteactivity/{token}/{activityId}")
+    @PostMapping("/deleteactivity/{token}/{activityId}")
     public String deleteActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         redisUtil.geoRemove(ConstantUtil.onlineActivity,activityId);

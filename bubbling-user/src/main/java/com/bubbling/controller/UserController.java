@@ -80,7 +80,7 @@ public class UserController {
      * 2022-03-19 10:38:37 GMT+8
      * @author k
      */
-    @DeleteMapping("/logout/{token}/{password}")
+    @PostMapping("/logout/{token}/{password}")
     public String logout(@PathVariable("token") String token,@PathVariable("password") String password){
         String userPhone=JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         BubblingUser bubblingUser = userService.queryUserOnPhoneAndPassword(userPhone,password);
@@ -215,7 +215,7 @@ public class UserController {
      * 2022-03-19 21:10:33 GMT+8
      * @author k
      */
-    @DeleteMapping("/quitactivity/{token}/{activityId}")
+    @PostMapping("/quitactivity/{token}/{activityId}")
     public String quitActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         if(userService.userQuitActivity(userPhone, activityId)==1)
