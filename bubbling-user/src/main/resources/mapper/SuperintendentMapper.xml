@@ -6,7 +6,7 @@
 <mapper namespace="com.bubbling.mapper.SuperintendentMapper">
     <insert id="superintendentCreateActivity">
         insert into `parti_activity`(`userphone`,`activityid`,`state`)
-        values (#{userPhone},#{activityId},5)
+        values (#{userPhone},#{activityId},1)
     </insert>
     <update id="superintendentDeleteActivity">
         update `parti_activity`
