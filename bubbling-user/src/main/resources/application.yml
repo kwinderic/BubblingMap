@@ -28,5 +28,5 @@ logging:
         mapper: debug
 
 tencent-cloud:
-  secretId:
-  secretKey:
+  secretId: AKID4xaw2rQWLtAAtKUFkywd3C4fFYZJnzuY
+  secretKey: PXNwEFza0B5i5B0YpreBSUGm24ygBRQ8
