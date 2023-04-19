@@ -12,6 +12,7 @@ public interface ActivityMapper {
 
     List<Map<String,Object>> showActivities(Map<String,Object> map);
     int createActivity(Map<String,Object> map);
+    int dissolutionActivity(Map<String,Object> map);
     int activityNum(Map<String,Object> map);
     int recordUserLocation(Map<String,Object> map);
     int eraseUserLocation(Map<String,String> map);

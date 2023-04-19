@@ -2,6 +2,7 @@ package com.bubbling.service;
 
 import ch.qos.logback.core.db.dialect.MsSQLDialect;
 
+import javax.jws.Oneway;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public interface ActivityService {
 //    int userSuspendAct(Map<String,String> map);
 //    int userCompleteAct(Map<String,String> map);
     int createActivity(Map<String,Object> map,List<Map<String,Object>> maps);
+    int dissolutionActivity(Map<String,Object> map);
     List<Map<String,Object>> showUserTaskState(Map<String,Object> map);
     int alterActInfo(Map<String,Object> map);
 }

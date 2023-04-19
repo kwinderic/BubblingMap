@@ -163,6 +163,17 @@ public class ActivityServiceImpl implements ActivityService{
         return 0;
     }
 
+    @Override
+    public int dissolutionActivity(Map<String, Object> map) {
+        if(activityMapper.actRunState(map) == 1){
+            return 1;
+        }else if(activityMapper.userPartiState(map) != 1){
+            return 2;
+        }else{
+            return -1*activityMapper.dissolutionActivity(map);
+        }
+    }
+
 
     @Transactional
     @Override

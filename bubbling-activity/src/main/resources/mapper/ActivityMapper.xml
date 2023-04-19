@@ -160,6 +160,12 @@
         values (#{activityId},#{name},#{startTime},#{endTime},#{place},#{longitude},#{latitude},#{type},#{sponsorName},#{sponsorPhone});
     </insert>
 
+    <update id="dissolutionActivity">
+        update activity
+        set `state` = 1
+        where `activityid` = #{activityId}
+    </update>
+
     <select id="activityNum" resultType="Integer">
         select count(activityId)
         from activity;
