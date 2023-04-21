@@ -112,7 +112,6 @@ public class ActivityController {
             maps.add(ReflectUtil.getObjectValue(activityTask));
         }
         map.replace("sponsorPhone",userPhone);
-        System.out.println(maps);
         activityService.createActivity(map,maps);
         userServiceConsumer.addActivity(token,map.get("activityId").toString(),map.get("longitude").toString(),map.get("latitude").toString());
         commonMessage = new CommonMessage(200,"活动发起成功");

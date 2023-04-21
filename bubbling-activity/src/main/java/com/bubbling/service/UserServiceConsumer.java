@@ -15,10 +15,10 @@ public interface UserServiceConsumer {
 //    @PostMapping("/user/partiactivity/{token}/{activityId}")
 //    String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId);
 
-    @PostMapping("/addactivity/{token}/{activityId}/{longitude}/{latitude}")
+    @PostMapping("/superintendent/addactivity/{token}/{activityId}/{longitude}/{latitude}")
     String addActivity(@PathVariable("token") String token, @PathVariable("activityId") String activityId,@PathVariable("longitude") String longitude,@PathVariable("latitude") String latitude);
 
-    @DeleteMapping("/deleteactivity/{token}/{activityId}")
+    @PostMapping("/superintendent/deleteactivity/{token}/{activityId}")
     String deleteActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId);
 }
 
