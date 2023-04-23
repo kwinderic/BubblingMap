@@ -40,9 +40,11 @@
         where `state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getPartiActivityList" resultType="Map">
-        select `userphone`,`activityid`,`create_time`
-        from parti_activity
-        where `state`=0 and `userphone`=#{userPhone}
+        select a.*
+        from `parti_activity` p
+        right join `activity` a
+        on a.activityid=p.activityid
+        where a.`state`&lt;&gt;1 and p.`state`=0 and `userphone`=#{userPhone}
     </select>
     <select id="getUnderReviewActivityList" resultType="Map">
         select `userphone`,`activityid`,`create_time`

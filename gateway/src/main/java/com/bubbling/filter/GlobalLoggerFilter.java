@@ -55,10 +55,12 @@ public class GlobalLoggerFilter implements GlobalFilter, Ordered {
                 result=chain.filter(exchange);
             }//捕获到jwt异常，则解析jwt失败，获取不到userPhone，则日志输出token
             catch (TokenExpiredException e){
+                log.error(e.getMessage(), e);
                 log.info("[token] in carry jwt: "+token);
                 exchange.getResponse().setStatusCode(HttpStatus.GONE);
                 return exchange.getResponse().setComplete();
             }catch (JWTVerificationException | JWTCreationException e){
+                log.error(e.getMessage(), e);
                 log.info("[token] in carry jwt: "+token);
                 exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
                 return exchange.getResponse().setComplete();

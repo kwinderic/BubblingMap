@@ -30,7 +30,7 @@ public class SuperintendentController {
     private CommonMessage commonMessage;
 
     /**
-     * 添加一个活动
+     * 发布一个活动
      * 【已测试】
      * 2022-03-26 10:04:25 GMT+8
      * @author k
@@ -63,7 +63,7 @@ public class SuperintendentController {
     }
 
     /**
-     * 获取创建的活动列表
+     * 获取发布的活动列表
      * 【已测试】
      * 2022-03-20 10:41:57 GMT+8
      * @author k

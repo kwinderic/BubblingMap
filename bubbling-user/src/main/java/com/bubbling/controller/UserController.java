@@ -218,7 +218,7 @@ public class UserController {
     @PostMapping("/quitactivity/{token}/{activityId}")
     public String quitActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
-        if(userService.userQuitActivity(userPhone, activityId)==1)
+        if(userService.userQuitActivity(userPhone, activityId)>=1)
             commonMessage = new CommonMessage(210, "删除成功");
         else commonMessage = new CommonMessage(211, "删除失败");
         return JSON.toJSONString(commonMessage);
