@@ -13,7 +13,7 @@ spring:
         - id: user_routes
           uri: http://localhost:8081
           predicates:
-            - Path=/user/{api}/{token}/**,/admin/{api}/{token}/**,/team/{api}/{token}/**
+            - Path=/user/{api}/{token}/**,/superintendent/{api}/{token}/**
         - id: activity_routes
           uri: http://localhost:8082
           predicates:

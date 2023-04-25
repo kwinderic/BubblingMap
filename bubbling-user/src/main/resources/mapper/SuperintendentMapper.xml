@@ -14,9 +14,11 @@
         where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=1
     </update>
     <select id="getCreateActivityList" resultType="Map">
-        select *
-        from `parti_activity`
-        where `state`=1 and `userphone`=#{userPhone}
+        select a.*
+        from `parti_activity` p
+        right join `activity` a
+        on a.activityid=p.activityid
+        where p.`state`=1 and `userphone`=#{userPhone}
     </select>
     <select id="getUserApplyList" resultType="Map">
         select `userphone`,`activityid`,`create_time`
