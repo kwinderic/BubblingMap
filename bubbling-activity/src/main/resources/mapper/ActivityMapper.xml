@@ -5,7 +5,7 @@
 
 <mapper namespace="com.bubbling.mapper.ActivityMapper">
 
-    <insert id="recordUserLocation">
+    <insert id="recordUserLocation" >
         insert into act_location (`activityid`,`userphone`,`longitude`,`latitude`,`time`)
         values (#{activityId},#{userPhone},#{longitude},#{latitude},#{time});
     </insert>
@@ -31,7 +31,7 @@
     <select id="showActTask" resultType="ActivityTask">
         select *
         from act_task
-        where `activityid` =#{activityId} and `state` = 0;
+        where `activityid` = #{activityId} and `state` = 0;
     </select>
 
     <insert id="createTask" parameterType="java.util.List">
@@ -176,7 +176,41 @@
         set `name` = #{name},`starttime` = #{startTime},`endtime` = #{endTime},`place` = #{place},`longitude` = #{longitude},`latitude` = #{latitude},`type` = #{type},`sponsorname` = #{sponsorName}
         where `activityid` = #{activityId}
     </update>
+
+    <insert id="insertUserTaskState" parameterType="java.util.List">
+        insert into user_task_state (`activityid`,`userphone`,`taskid`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+             #{item.activityId},
+             #{item.userPhone},
+             #{item.taskId}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertUserActProgress" parameterType="java.util.List">
+        insert into act_progress (`activityid`,`userphone`)
+        values(#{activityId},#{userPhone});
+    </insert>
+
+    <select id="queryActProgress" resultType="Integer">
+        select `state`
+        from act_progress
+        where `userPhone` = #{userPhone} and `activityid` = #{activityId} ;
+    </select>
+
+    <select id="queryUserTaskState" resultType="java.lang.String">
+        select `taskid`
+        from `user_task_state`
+        where `activityid` = #{activityId} and `userphone` = #{userPhone};
+    </select>
     
+    <select id="queryActTask" resultType="java.lang.String">
+        select `taskid`
+        from `act_task`
+        where `activityid` = #{activityId} and `state` = 0;
+    </select>
 <!--    <select id="taskNum" resultType="Integer">-->
 <!--        select count(`taskid`)-->
 <!--        from act_task;-->

@@ -364,8 +364,10 @@ public class ActivityController {
             commonMessage = new CommonMessage(311,"活动不存在");
         }else if(sstate == 2){
             commonMessage = new CommonMessage(312,"活动已经结束");
-        }else {
-            commonMessage = new CommonMessage(200,"用户状态成功");
+        }else if(sstate == 3){
+            commonMessage = new CommonMessage(313,"用户未参加活动");
+        }else{
+            commonMessage = new CommonMessage(200,"修改用户状态成功");
         }
         return JSON.toJSONString(commonMessage);
     }

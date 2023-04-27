@@ -20,6 +20,9 @@ public interface UserServiceConsumer {
 
     @PostMapping("/superintendent/deleteactivity/{token}/{activityId}")
     String deleteActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId);
+
+    @PostMapping("/user/partiactivity/{token}/{activityId}")
+    String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId);
 }
 
 

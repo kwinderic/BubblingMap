@@ -2,15 +2,13 @@ package com.bubbling.service;
 
 import ch.qos.logback.core.joran.conditional.IfAction;
 import com.bubbling.mapper.ActivityMapper;
+import com.bubbling.pojo.UserTaskState;
 import jdk.internal.dynalink.linker.LinkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActivityServiceImpl implements ActivityService{
@@ -105,11 +103,16 @@ public class ActivityServiceImpl implements ActivityService{
     @Transactional
     @Override
     public int alterUserActProgress(Map<String, Object> map) {
+        Integer state = activityMapper.userPartiState(map);
         if(activityMapper.actRunState(map) == 1){
             return 1;
         }else if(activityMapper.actRunState(map) == 3){
             return 2;
-        }else{
+        }else if(state == null || (state != 0 && state != 1)){
+            return 3;
+        }else {
+            if(activityMapper.queryActProgress(map) == null)
+                activityMapper.insertUserActProgress(map);
             return -1*activityMapper.alterUserActProgress(map);
         }
     }
@@ -129,6 +132,26 @@ public class ActivityServiceImpl implements ActivityService{
 //            return 4;
 //        }
         else {
+            List<String> list1= activityMapper.queryActTask(map);
+            List<String> list2= activityMapper.queryUserTaskState(map);
+            List<Map<String,Object>> maps = new ArrayList<>();
+            for(String l1 : list1){
+                boolean flag = false;
+                for(String l2 : list2){
+                    if(l1.equals(l2)){
+                        flag = true;break;
+                    }
+                }
+                if(flag == false){
+                    Map<String,Object> newMap = new HashMap<>();
+                    newMap.put("activityId",map.get("activityId"));
+                    newMap.put("userPhone",map.get("userPhone"));
+                    newMap.put("taskId",l1);
+                    maps.add(newMap);
+                }
+            }
+            if(!maps.isEmpty())
+                activityMapper.insertUserTaskState(maps);
             return -1 * activityMapper.alterUserTaskState(map);
         }
     }
@@ -163,6 +186,7 @@ public class ActivityServiceImpl implements ActivityService{
         return 0;
     }
 
+    @Transactional
     @Override
     public int dissolutionActivity(Map<String, Object> map) {
         if(activityMapper.actRunState(map) == 1){
@@ -178,9 +202,29 @@ public class ActivityServiceImpl implements ActivityService{
     @Transactional
     @Override
     public List<Map<String, Object>> showUserTaskState(Map<String, Object> map) {
-        if(activityMapper.actRunState(map) == 2 || activityMapper.userPartiState(map) == 2){
+        if(activityMapper.actRunState(map) == 1 || activityMapper.userPartiState(map) == 2){
             return null;
         }else {
+            List<String> list1= activityMapper.queryActTask(map);
+            List<String> list2= activityMapper.queryUserTaskState(map);
+            List<Map<String,Object>> maps = new ArrayList<>();
+            for(String l1 : list1){
+                boolean flag = false;
+                for(String l2 : list2){
+                    if(l1.equals(l2)){
+                        flag = true;break;
+                    }
+                }
+                if(flag == false){
+                    Map<String,Object> newMap = new HashMap<>();
+                    newMap.put("activityId",map.get("activityId"));
+                    newMap.put("userPhone",map.get("userPhone"));
+                    newMap.put("taskId",l1);
+                    maps.add(newMap);
+                }
+            }
+            if(!maps.isEmpty())
+                activityMapper.insertUserTaskState(maps);
             return activityMapper.showUserTaskState(map);
         }
     }
@@ -198,6 +242,7 @@ public class ActivityServiceImpl implements ActivityService{
             return -1*activityMapper.alterActInfo(map);
         }
     }
+
 
     @Transactional
     @Override
