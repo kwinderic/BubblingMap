@@ -52,21 +52,28 @@
         where `state`=5 and `userphone`=#{userPhone}
     </select>
     <insert id="insertCardInfo">
-        insert into user_card_info(`userphone`,`realname`,`gender`,`identitype`,`identityno`,`birthday`,`area`,`relation`,`emergencyphone`)
+        insert into `user_card_info`(`userphone`,`realname`,`gender`,`identitype`,`identityno`,`birthday`,`area`,`relation`,`emergencyphone`)
         values (#{userPhone},#{realName},#{gender},#{identityType},#{identityNo},#{birthday},#{area},#{relation},#{emergencyPhone})
     </insert>
     <update id="deleteCardInfo">
-        update user_card_info
+        update `user_card_info`
         set `state`=1
         where `userphone`=#{userPhone}
     </update>
     <insert id="userPartiActivity">
-        insert into parti_activity(`userphone`,`activityid`,`state`)
+        insert into `parti_activity`(`userphone`,`activityid`,`state`)
         values (#{userPhone},#{activityId},5)
     </insert>
     <update id="userQuitActivity">
-        update parti_activity
-        set `state`=3
-        where `userphone`=#{userPhone} and `activityid`=#{activityId}
+        update `parti_activity`
+        set `state`=2
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and (`state`=0 or `state`=5)
     </update>
+    <select id="getInApplyList" resultType="Map">
+        select p.`userphone`,p.`activityId`,a.`name`
+        from `parti_activity` p
+        join `activity` a
+        on a.`activityid`=p.`activityid`
+        where `userphone`=#{userPhone} and p.`state`=5
+    </select>
 </mapper>

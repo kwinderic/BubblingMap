@@ -223,4 +223,11 @@ public class UserController {
         else commonMessage = new CommonMessage(211, "删除失败");
         return JSON.toJSONString(commonMessage);
     }
+
+    @GetMapping("/getapplylist/{token}")
+    public String getInApplyList(@PathVariable("token") String token){
+        String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        commonMessage=new CommonMessage(210,"获取成功",userService.getInApplyList(userPhone));
+        return JSON.toJSONString(commonMessage);
+    }
 }

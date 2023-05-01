@@ -155,4 +155,11 @@ public class UserServiceImpl implements UserService{
         });
         return lists;
     }
+
+    @Override
+    public List<Map<String, String>> getInApplyList(String userPhone) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        return userMapper.getInApplyList(map);
+    }
 }

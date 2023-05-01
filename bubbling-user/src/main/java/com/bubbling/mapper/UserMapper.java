@@ -20,4 +20,5 @@ public interface UserMapper {
     int deleteCardInfo(Map<String,Object> map);
     int userPartiActivity(Map<String,String> map);
     int userQuitActivity(Map<String,String> map);
+    List<Map<String,String>> getInApplyList(Map<String,String> map);
 }

@@ -14,16 +14,16 @@
         where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=1
     </update>
     <select id="getCreateActivityList" resultType="Map">
-        select a.*
+        select *
+        from `parti_activity`
+        where `state`=1 and `userphone`=#{userPhone}
+    </select>
+    <select id="getUserApplyList" resultType="Map">
+        select a.*,p.userphone applyUserPhone
         from `parti_activity` p
         right join `activity` a
         on a.activityid=p.activityid
-        where p.`state`=1 and `userphone`=#{userPhone}
-    </select>
-    <select id="getUserApplyList" resultType="Map">
-        select `userphone`,`activityid`,`create_time`
-        from `parti_activity`
-        where `activityid`=#{activityId} and `state`=5
+        where p.`activityid`=#{activityId} and p.`state`=5
     </select>
     <update id="superintendentPassApply">
         update `parti_activity`
