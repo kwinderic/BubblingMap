@@ -28,4 +28,6 @@ public interface ActivityService {
     int dissolutionActivity(Map<String,Object> map);
     List<Map<String,Object>> showUserTaskState(Map<String,Object> map);
     int alterActInfo(Map<String,Object> map);
+    int actRun(Map<String,Object> map);
+    List<Map<String,Object>> findAct(Map<String,Object> map);
 }

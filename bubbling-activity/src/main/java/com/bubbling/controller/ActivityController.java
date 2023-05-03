@@ -13,6 +13,7 @@ import com.bubbling.utils.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -347,17 +348,17 @@ public class ActivityController {
     /**
      * 修改用户在活动中的状态 【已测试】
      * @param token
-     * @param activtyId
+     * @param activityId
      * @param state
      * @date 2022-03-26 20:49:28
      * @author lzh
      */
     @PostMapping("/alteruseractprogress/{token}/{activityId}/{state}")
-    public String alterUserActProgress(@PathVariable("token") String token,@PathVariable("activityId")String activtyId,@PathVariable("state") int state) throws Exception{
+    public String alterUserActProgress(@PathVariable("token") String token,@PathVariable("activityId")String activityId,@PathVariable("state") int state) throws Exception{
         String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         Map<String,Object> map = new HashMap<>();
         map.put("userPhone",userPhone);
-        map.put("activityId",activtyId);
+        map.put("activityId",activityId);
         map.put("state",state);
         int sstate = activityService.alterUserActProgress(map);
         if(sstate == 1){
@@ -369,6 +370,33 @@ public class ActivityController {
         }else{
             commonMessage = new CommonMessage(200,"修改用户状态成功");
         }
+        return JSON.toJSONString(commonMessage);
+    }
+
+    @GetMapping("/actrun/{token}/{activityId}")
+    public String actRun(@PathVariable("token") String token,@PathVariable("activityId") String activityId) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activityId);
+        java.util.Date day=new Date();
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(sdf.format(day));
+        map.put("nowTime",sdf.format(day));
+        Map<String,Object> returnMap = new HashMap<>();
+        returnMap.put("state",activityService.actRun(map));
+        commonMessage = new CommonMessage(200,"返回成功",returnMap);
+        return JSON.toJSONString(commonMessage);
+    }
+
+    @GetMapping("/findact/{token}/{key}")
+    public String findAct(@PathVariable("token") String token,@PathVariable("key") String key) throws Exception{
+        String userPhone= JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("key",key);
+        System.out.println(key);
+        commonMessage = new CommonMessage(200,"返回成功",activityService.findAct(map));
         return JSON.toJSONString(commonMessage);
     }
 }

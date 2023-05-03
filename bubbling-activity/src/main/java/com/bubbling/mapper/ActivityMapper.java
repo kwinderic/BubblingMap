@@ -29,9 +29,7 @@ public interface ActivityMapper {
     Integer userPartiState(Map<String,Object> map);
     int userRunState(Map<String,Object> map);
     List<Map<String,Object>> actShouldRun(Map<String,Object> map);
-    int actRun(Map<String, Object> map);
     List<Map<String,Object>> actShouldFinish(Map<String, Object> map);
-    int actFinish(Map<String,Object> map);
     int userEnterAct(Map<String,String> map);
     int userExitAct(Map<String,String> map);
     int userSuspendAct(Map<String,String> map);
@@ -44,4 +42,8 @@ public interface ActivityMapper {
     Integer queryActProgress(Map<String,Object> map);
     List<String> queryActTask(Map<String,Object> map);
     List<String> queryUserTaskState(Map<String,Object> map);
+    int actRun(Map<String, Object> map);
+    int actFinish(Map<String,Object> map);
+    int showActState(Map<String,Object> map);
+    List<Map<String,Object>> findAct(Map<String,Object> map);
 }

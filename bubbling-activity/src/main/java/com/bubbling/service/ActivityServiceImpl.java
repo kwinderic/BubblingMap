@@ -243,6 +243,19 @@ public class ActivityServiceImpl implements ActivityService{
         }
     }
 
+    @Transactional
+    @Override
+    public int actRun(Map<String, Object> map) {
+        activityMapper.actRun(map);
+        activityMapper.actFinish(map);
+        return activityMapper.showActState(map);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAct(Map<String, Object> map) {
+        return activityMapper.findAct(map);
+    }
+
 
     @Transactional
     @Override
@@ -259,6 +272,5 @@ public class ActivityServiceImpl implements ActivityService{
             return activityMapper.showAllUserLocation(map);
         }
     }
-
 
 }

@@ -101,11 +101,6 @@
         where `state` = 0 and `starttime` &lt;= nowtime;
     </select>
 
-    <update id="actRun">
-        update activity
-        set `state` = 2
-        where `state` = 0 and `starttime` &lt;= nowtime;
-    </update>
 
     <select id="actShouldFinish" resultType="BubblingActInfo">
         select *
@@ -113,11 +108,6 @@
         where `state` = 2 and `endtime` &gt;= nowtime;
     </select>
 
-    <update id="actFinish">
-        update activity
-        set `state` = 3
-        where `state` = 2 and `starttime` &lt;= nowtime;
-    </update>
 
     <update id="userEnterAct">
         update act_progress
@@ -152,7 +142,7 @@
     <select id="showActivities" resultType="BubblingActInfo">
         select *
         from `activity`
-        where `state` = 0 or `state` = 2
+        where `state` = 0 or `state` = 2 or `state` = 3
     </select>
 
     <insert id="createActivity">
@@ -215,4 +205,28 @@
 <!--        select count(`taskid`)-->
 <!--        from act_task;-->
 <!--    </select>-->
+
+    <select id="showActState" resultType="Integer">
+        select `state`
+        from activity
+        where #{activityId}= `activityid`
+    </select>
+
+    <update id="actRun">
+        update `activity`
+        set `state` = 2
+        where `endtime`  &gt;= #{nowTime} and `starttime`  &lt;= #{nowTime} and `state` &lt;&gt; 1;
+    </update>
+
+    <update id="actFinish">
+        update activity
+        set `state` = 3
+        where `endtime` &lt;= #{nowTime}  and `state` &lt;&gt; 1
+    </update>
+
+    <select id="findAct" resultType="BubblingActInfo">
+        select *
+        from `activity`
+        where (`name` like concat('%',#{key},'%') or `name`=#{key}) and `state` &lt;&gt; 1
+    </select>
 </mapper>
