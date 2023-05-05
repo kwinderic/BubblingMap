@@ -70,10 +70,15 @@
         where `userphone`=#{userPhone} and `activityid`=#{activityId} and (`state`=0 or `state`=5)
     </update>
     <select id="getInApplyList" resultType="Map">
-        select p.`userphone`,p.`activityId`,a.`name`
+        select p.`userphone`,p.`activityId`,a.`name`,a.`starttime`
         from `parti_activity` p
         join `activity` a
         on a.`activityid`=p.`activityid`
         where `userphone`=#{userPhone} and p.`state`=5
+    </select>
+    <select id="isInCharge" resultType="Map">
+        select *
+        from `parti_activity`
+        where `userphone`=#{userPhone} and `activityid`=#{activityId} and `state`=1
     </select>
 </mapper>

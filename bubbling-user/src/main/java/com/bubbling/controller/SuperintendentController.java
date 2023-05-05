@@ -3,6 +3,7 @@ package com.bubbling.controller;
 import com.alibaba.fastjson.JSON;
 import com.bubbling.dto.CommonMessage;
 import com.bubbling.service.SuperintendentService;
+import com.bubbling.service.UserService;
 import com.bubbling.utils.ConstantUtil;
 import com.bubbling.utils.JWTUtil;
 import com.bubbling.utils.RedisUtil;
@@ -26,6 +27,8 @@ public class SuperintendentController {
     @Autowired
     private SuperintendentService superintendentService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private RedisUtil redisUtil;
     private CommonMessage commonMessage;
 
@@ -40,6 +43,7 @@ public class SuperintendentController {
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         if(superintendentService.superintendentCreateActivity(userPhone, activityId)==1){
             redisUtil.geoAdd(ConstantUtil.onlineActivity, new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)), activityId);
+            userService.userPartiActivity(userPhone, activityId);
             commonMessage = new CommonMessage(210, "添加成功");
         }
         else commonMessage = new CommonMessage(211, "添加失败");

@@ -7,7 +7,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        server-addr: 82.157.154.180:8848
     gateway:
       routes:
         - id: user_routes

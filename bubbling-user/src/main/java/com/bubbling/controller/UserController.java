@@ -193,7 +193,7 @@ public class UserController {
     }
 
     /**
-     * 参加一个活动，记录到持久化数据库中
+     * 申请参加一个活动
      * 【已测试】
      * 2022-03-19 21:09:36 GMT+8
      * @author k
@@ -201,9 +201,13 @@ public class UserController {
     @PostMapping("/partiactivity/{token}/{activityId}")
     public String partiActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        if(userService.isInCharge(userPhone, activityId)==1){
+            commonMessage=new CommonMessage(212, "你是该活动的负责人！");
+            return JSON.toJSONString(commonMessage);
+        }
         int returnValue=userService.userPartiActivity(userPhone, activityId);
         if(returnValue==1)
-            commonMessage = new CommonMessage(210, "添加成功");
+            commonMessage = new CommonMessage(210, "申请成功");
         else if(returnValue==-1) commonMessage = new CommonMessage(212, "审核中");
         else commonMessage = new CommonMessage(211, "已参加");
         return JSON.toJSONString(commonMessage);
@@ -218,6 +222,10 @@ public class UserController {
     @PostMapping("/quitactivity/{token}/{activityId}")
     public String quitActivity(@PathVariable("token") String token,@PathVariable("activityId") String activityId){
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
+        if(userService.isInCharge(userPhone, activityId)==1){
+            commonMessage=new CommonMessage(212, "你是该活动的负责人！");
+            return JSON.toJSONString(commonMessage);
+        }
         if(userService.userQuitActivity(userPhone, activityId)>=1)
             commonMessage = new CommonMessage(210, "删除成功");
         else commonMessage = new CommonMessage(211, "删除失败");

@@ -21,4 +21,5 @@ public interface UserService {
     int userQuitActivity(String userPhone, String activityId);
     ArrayList<PointOnMap> getNearbyActivity(String userPhone, double radius, long count);
     List<Map<String,String>> getInApplyList(String userPhone);
+    int isInCharge(String userPhone, String activityId);
 }

@@ -21,4 +21,5 @@ public interface UserMapper {
     int userPartiActivity(Map<String,String> map);
     int userQuitActivity(Map<String,String> map);
     List<Map<String,String>> getInApplyList(Map<String,String> map);
+    List<Map<String,String>> isInCharge(Map<String,String> map);
 }

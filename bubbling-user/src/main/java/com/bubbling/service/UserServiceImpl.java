@@ -92,7 +92,9 @@ public class UserServiceImpl implements UserService{
     public BubblingUserCard getUserCardInfo(String userPhone) {
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
-        return userMapper.getUserCardInfo(map);
+        BubblingUserCard userCardInfo = userMapper.getUserCardInfo(map);
+        System.out.println(userCardInfo.getBirthday().getTime());
+        return userCardInfo;
     }
 
     @Override
@@ -161,5 +163,14 @@ public class UserServiceImpl implements UserService{
         HashMap<String, String> map = new HashMap<>();
         map.put("userPhone",userPhone);
         return userMapper.getInApplyList(map);
+    }
+
+    @Override
+    public int isInCharge(String userPhone, String activityId) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("userPhone",userPhone);
+        map.put("activityId",activityId);
+        if(!userMapper.isInCharge(map).isEmpty())   return 1;
+        return 0;
     }
 }
