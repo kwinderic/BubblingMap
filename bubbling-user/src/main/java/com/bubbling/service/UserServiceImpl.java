@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService{
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
         BubblingUser bubblingUser = userMapper.queryUserByPhone(map);
-        if(bubblingUser!=null || !password.isEmpty() || password.equals(bubblingUser.getPassword()))
+        if(bubblingUser!=null && !password.isEmpty() && password.equals(bubblingUser.getPassword()))
             return bubblingUser;
         return null;
     }
@@ -93,7 +93,6 @@ public class UserServiceImpl implements UserService{
         Map<String, String> map = new HashMap<>();
         map.put("userPhone", userPhone);
         BubblingUserCard userCardInfo = userMapper.getUserCardInfo(map);
-        System.out.println(userCardInfo.getBirthday().getTime());
         return userCardInfo;
     }
 

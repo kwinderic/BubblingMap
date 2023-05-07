@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/bubbling?useUnicode=true&characterEncoding=utf8&useSSL=true
+    url: jdbc:mysql://82.157.154.180:3306/bubbling?useUnicode=true&characterEncoding=utf8&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: User-Module-Service
@@ -14,7 +14,7 @@ spring:
       discovery:
         server-addr: 82.157.154.180:8848
   redis:
-    host: 121.5.76.140
+    host: localhost
     password: bubbling123456
 
 mybatis:
