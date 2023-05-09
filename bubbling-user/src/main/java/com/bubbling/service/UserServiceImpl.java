@@ -133,7 +133,9 @@ public class UserServiceImpl implements UserService{
             if(list.get("activityid").equals(activityId))
                 return -1;
         }
-        return userMapper.userPartiActivity(map);
+        if(userMapper.userPartiActivity2(map)==1)
+            return 1;
+        return userMapper.userPartiActivity1(map);
     }
 
     @Override

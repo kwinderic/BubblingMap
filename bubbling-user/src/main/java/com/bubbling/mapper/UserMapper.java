@@ -18,7 +18,8 @@ public interface UserMapper {
     List<Map<String,String>> getUnderReviewActivityList(Map<String,String> map);
     int insertCardInfo(Map<String,Object> map);
     int deleteCardInfo(Map<String,Object> map);
-    int userPartiActivity(Map<String,String> map);
+    int userPartiActivity1(Map<String,String> map);
+    int userPartiActivity2(Map<String,String> map);
     int userQuitActivity(Map<String,String> map);
     List<Map<String,String>> getInApplyList(Map<String,String> map);
     List<Map<String,String>> isInCharge(Map<String,String> map);

@@ -60,10 +60,15 @@
         set `state`=1
         where `userphone`=#{userPhone}
     </update>
-    <insert id="userPartiActivity">
+    <insert id="userPartiActivity1">
         insert into `parti_activity`(`userphone`,`activityid`,`state`)
         values (#{userPhone},#{activityId},5)
     </insert>
+    <update id="userPartiActivity2">
+        update `parti_activity`
+        set `state`=5
+        where `userphone`=#{userPhone} and `activityid`=#{activityId}
+    </update>
     <update id="userQuitActivity">
         update `parti_activity`
         set `state`=2

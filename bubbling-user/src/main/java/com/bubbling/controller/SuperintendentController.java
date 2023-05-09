@@ -43,7 +43,6 @@ public class SuperintendentController {
         String userPhone = JWTUtil.verify(token).getClaim("userPhone").toString().replace("\"", "");
         if(superintendentService.superintendentCreateActivity(userPhone, activityId)==1){
             redisUtil.geoAdd(ConstantUtil.onlineActivity, new Point(Double.parseDouble(longitude),Double.parseDouble(latitude)), activityId);
-            userService.userPartiActivity(userPhone, activityId);
             commonMessage = new CommonMessage(210, "添加成功");
         }
         else commonMessage = new CommonMessage(211, "添加失败");
